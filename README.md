@@ -33,7 +33,8 @@
 
 ##№ 1. Клонируй репозиторий:
    ```bash
-git clone https://github.com/mindcoree/TasksFastAPI.git
+   git clone https://github.com/mindcoree/TasksFastAPI.git
+   ```
 
 2. Установи Poetry (если ещё не установлен):
 
