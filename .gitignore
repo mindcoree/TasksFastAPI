@@ -1,0 +1,78 @@
+```
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Виртуальные окружения
+.env/
+venv/
+.venv/
+env/
+env.bak/
+venv.bak/
+
+# Poetry
+poetry.lock  # Можно включить в Git, если хотите фиксировать точные версии зависимостей
+.pypoetry/
+
+# Логи
+*.log
+logs/
+*.log.*
+
+# Базы данных
+*.db
+*.sqlite3
+*.sql
+
+# Файлы конфигурации с секретами
+.env
+.env.local
+.env.development
+.env.production
+*.pem
+*.key
+*.cert
+
+# Временные файлы и кэш
+*.cache
+.cache/
+.pytest_cache/
+.coverage
+coverage.xml
+*.cover
+*.py,cover
+.tox/
+.nox/
+.hypothesis/
+*.DS_Store
+Thumbs.db
+
+# IDE и редакторы
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-*
+
+# Docker
+Dockerfile.local
+docker-compose.yml.local
+*.dockerignore
+
+# Прочие
+*.bak
+*.swp
+*~
+*.tmp
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Папки с временными данными
+tmp/
+temp/
+```
