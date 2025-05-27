@@ -78,15 +78,40 @@ poetry install
 pip install -r requirements.txt
 ```
 
-### 5. Запуск проекта
-Активируйте виртуальное окружение:
-```bash
-poetry shell
-```
+### 5. Настройка базы данных
+1. Установите и запустите PostgreSQL.
+2. Создайте базу данных:
+   ```bash
+   createdb tasks_fastapi
+   ```
+3. Настройте строку подключения в `database/db.py`:
+   ```python
+   SQLALCHEMY_DATABASE_URL = "postgresql://user:password@localhost:5432/tasks_fastapi"
+   ```
+
+### 6. Настройка миграций с Alembic
+1. Установите Alembic:
+   ```bash
+   poetry add alembic
+   ```
+2. Инициализируйте Alembic для асинхронного SQLAlchemy:
+   ```bash
+   alembic init -t async migrations
+   ```
+3. Создайте миграцию для существующих моделей:
+   ```bash
+   alembic revision --autogenerate -m "Initial migration"
+   ```
+4. Примените миграции к базе данных:
+   ```bash
+   alembic upgrade head
+   ```
+
+### 7. Запуск проекта
 Запустите сервер для нужного задания:
 ```bash
 cd task_1_notes
-uvicorn app.core:app --reload
+uvicorn app.main:app --reload
 ```
 Откройте в браузере:
 - API: `http://127.0.0.1:8000`
@@ -115,6 +140,10 @@ uvicorn app.core:app --reload
 - **SQLAlchemy**: ORM для работы с PostgreSQL.
   ```bash
   poetry add sqlalchemy
+  ```
+- **Alembic**: Управление миграциями базы данных.
+  ```bash
+  poetry add alembic
   ```
 - **PyJWT**: Создание и проверка JWT-токенов.
   ```bash
@@ -191,6 +220,6 @@ uvicorn app.core:app --reload
 ## 📬 Контакты
 
 - **GitHub**: [mindcoree](https://github.com/mindcoree)
-- **Email**: tima.042007@mail.ru
+- **Email**: tim.042007@mail.ru
 
 **Начните создавать API с FastAPI уже сегодня! 🚀**
