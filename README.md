@@ -31,12 +31,17 @@
 
 ## 🚀 Быстрый старт
 
-1. Установи Poetry (если ещё не установлен):
+##№ 1. Клонируй репозиторий:
+   ```bash
+git clone https://github.com/mindcoree/TasksFastAPI.git
+
+2. Установи Poetry (если ещё не установлен):
 
    ```bash
    curl -sSL https://install.python-poetry.org | python3 -
+
 2. Установи зависимости проекта:
 
- ```bash
-  poetry install
+    ```bash
+     poetry install
 
