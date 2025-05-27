@@ -78,18 +78,7 @@ poetry install
 pip install -r requirements.txt
 ```
 
-### 5. Настройка базы данных
-1. Установите и запустите PostgreSQL.
-2. Создайте базу данных:
-   ```bash
-   createdb tasks_fastapi
-   ```
-3. Настройте строку подключения в `database/db.py`:
-   ```python
-   SQLALCHEMY_DATABASE_URL = "postgresql://user:password@localhost:5432/tasks_fastapi"
-   ```
-
-### 6. Запуск проекта
+### 5. Запуск проекта
 Активируйте виртуальное окружение:
 ```bash
 poetry shell
