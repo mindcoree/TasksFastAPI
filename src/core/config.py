@@ -6,9 +6,13 @@ class RunConfig(BaseModel):
     host: str = "127.0.0.1"
     port: int = 8000
 
+class ApiUsersPrefix(BaseModel):
+    prefix: str = "/users"
+
 
 class ApiPrefix(BaseModel):
     prefix: str = "/api"
+    users: ApiUsersPrefix = ApiUsersPrefix()
 
 
 class DatabaseConfig(BaseModel):
