@@ -202,6 +202,6 @@ uvicorn app.main:app --reload
 ## 📬 Контакты
 
 - **GitHub**: [mindcoree](https://github.com/mindcoree)
-- **Email**: cardinall1304@gmail.com
+- **Email**: tima.042007@mail.ru
 
 **Начните создавать API с FastAPI уже сегодня! 🚀**
