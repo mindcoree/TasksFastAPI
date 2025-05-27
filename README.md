@@ -31,10 +31,10 @@
 
 ## 🚀 Быстрый старт
 
-##№ 1. Клонируй репозиторий:
-   ```bash
-   git clone https://github.com/mindcoree/TasksFastAPI.git
-   ```
+## 1. Клонируй репозиторий:
+    ```bash
+      git clone https://github.com/mindcoree/TasksFastAPI.git
+      ```
 
 2. Установи Poetry (если ещё не установлен):
 
@@ -45,4 +45,20 @@
 
     ```bash
      poetry install
+
+### 🛠 Используемые технологии
+   FastAPI
+   
+   SQLAlchemy   
+   
+   Uvicorn
+   
+   Pydantic
+   
+   JWT PyJWT
+   
+   PostgreSQL
+   
+   Poetry
+
 
