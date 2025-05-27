@@ -107,14 +107,38 @@ uvicorn app.main:app --reload
 
 ## 🛠 Технологии
 
-- **FastAPI**: Фреймворк для API.
-- **SQLAlchemy**: ORM для PostgreSQL.
-- **Uvicorn**: ASGI-сервер.
-- **Pydantic**: Валидация данных.
-- **PyJWT**: JWT-токены.
+- **FastAPI**: Фреймворк для создания высокопроизводительных API.
+  ```bash
+  poetry add fastapi
+  ```
+- **Uvicorn**: ASGI-сервер для запуска FastAPI.
+  ```bash
+  poetry add "uvicorn[standard]"
+  ```
+- **Pydantic**: Валидация данных и сериализация (с поддержкой проверки email).
+  ```bash
+  poetry add "pydantic[email]"
+  ```
+- **Pydantic-settings**: Управление настройками приложения через переменные окружения.
+  ```bash
+  poetry add pydantic-settings
+  ```
+- **SQLAlchemy**: ORM для работы с PostgreSQL.
+  ```bash
+  poetry add sqlalchemy
+  ```
+- **PyJWT**: Создание и проверка JWT-токенов.
+  ```bash
+  poetry add pyjwt
+  ```
 - **Passlib**: Хеширование паролей (bcrypt).
-- **PostgreSQL**: База данных.
-- **Poetry**: Управление зависимостями.
+  ```bash
+  poetry add passlib[bcrypt]
+  ```
+- **PostgreSQL**: Реляционная база данных (устанавливается отдельно).
+  - Установите PostgreSQL: https://www.postgresql.org/download/
+- **Poetry**: Управление зависимостями и виртуальным окружением.
+  - Уже установлен на шаге 3 в "Быстром старте".
 
 ---
 
@@ -161,6 +185,7 @@ uvicorn app.main:app --reload
 - [FastAPI Docs](https://fastapi.tiangolo.com/)
 - [FastAPI Users](https://github.com/fastapi-users/fastapi-users)
 - [Real Python: FastAPI](https://realpython.com/fastapi-python-web-apis/)
+- YouTube: “FastAPI Tutorial: Build a REST API”
 - GitHub: Поиск “fastapi boilerplate”
 
 ---
