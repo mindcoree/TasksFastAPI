@@ -1,5 +1,5 @@
 from typing import AsyncGenerator
-from config import settings
+from .config import settings
 from sqlalchemy.ext.asyncio import (
     create_async_engine,
     AsyncEngine,
