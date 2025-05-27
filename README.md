@@ -97,7 +97,7 @@ poetry shell
 Запустите сервер для нужного задания:
 ```bash
 cd task_1_notes
-uvicorn app.main:app --reload
+uvicorn app.core:app --reload
 ```
 Откройте в браузере:
 - API: `http://127.0.0.1:8000`
