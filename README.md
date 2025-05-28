@@ -86,7 +86,7 @@ pip install -r requirements.txt
    ```
 3. Настройте строку подключения в `database/db.py`:
    ```python
-   SQLALCHEMY_DATABASE_URL = "postgresql://user:password@localhost:5432/tasks_fastapi"
+   SQLALCHEMY_DATABASE_URL = "postgresql://user.py:password@localhost:5432/tasks_fastapi"
    ```
 
 ### 6. Настройка миграций с Alembic
