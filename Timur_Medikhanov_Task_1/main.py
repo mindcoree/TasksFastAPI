@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 from core.config import settings
-from api import router as api_router
+from Timur_Medikhanov_Task_1.api import router as api_router
 
 app_main = FastAPI()
 
