@@ -16,7 +16,7 @@ services:
     image: postgres
     environment:
       POSTGRES_DB: shop
-      POSTGRES_USER: user
+      POSTGRES_USER: user.py
       POSTGRES_PASSWORD: password
       PGDATA: /var/lib/postgresql/data
     ports:
