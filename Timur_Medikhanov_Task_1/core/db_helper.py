@@ -24,6 +24,12 @@ class DatabaseHelper:
             autoflush=False,
         )
 
-    def session_getter(self):
+    async def session_getter(self):
         async with self.session_factory() as session:
             yield session
+
+
+db_helper = DatabaseHelper(
+    url=str(settings.db.url),
+    echo=settings.db.echo,
+)
