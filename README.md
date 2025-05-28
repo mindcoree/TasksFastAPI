@@ -84,9 +84,9 @@ pip install -r requirements.txt
    ```bash
    createdb tasks_fastapi
    ```
-3. Настройте строку подключения в `database/db.py`:
+3. Настройте .env :
    ```python
-   SQLALCHEMY_DATABASE_URL = "postgresql://user.py:password@localhost:5432/tasks_fastapi"
+   NOTE_CONFIG__DB__URL=postgresql+asyncpg://mindcore:mindcore@localhost:5432/note
    ```
 
 ### 6. Настройка миграций с Alembic
