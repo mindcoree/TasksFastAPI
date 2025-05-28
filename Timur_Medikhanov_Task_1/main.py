@@ -2,8 +2,11 @@ import uvicorn
 from fastapi import FastAPI
 from core.config import settings
 from Timur_Medikhanov_Task_1.api import router as api_router
+from fastapi.responses import ORJSONResponse
 
-app_main = FastAPI()
+app_main = FastAPI(
+    default_response_class=ORJSONResponse,
+)
 
 app_main.include_router(api_router, prefix=settings.api.prefix)
 

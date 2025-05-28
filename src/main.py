@@ -4,6 +4,7 @@ from api import router as api_router
 from core.config import settings
 from contextlib import asynccontextmanager
 from core import db_helper
+from fastapi.responses import ORJSONResponse
 
 
 # Для корректного закрыть всех соединения с БД
@@ -20,6 +21,7 @@ async def lifespan(app: FastAPI):
 
 main_app = FastAPI(
     lifespan=lifespan,
+    default_response_class=ORJSONResponse,
 )
 main_app.include_router(api_router, prefix=settings.api.prefix)
 
