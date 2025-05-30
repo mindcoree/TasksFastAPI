@@ -1,10 +1,16 @@
+from pathlib import Path
+
 from pydantic import BaseModel, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+BASE_DIR = Path(__file__).parent.parent
 
 
 class RunConfig(BaseModel):
     host: str = "127.0.0.1"
     port: int = 8000
+
 
 class ApiUsersPrefix(BaseModel):
     prefix: str = "/users"
@@ -30,6 +36,11 @@ class DatabaseConfig(BaseModel):
     }
 
 
+class AuthJWT(BaseModel):
+    private_key_path: Path = BASE_DIR / "certs" / "private_key.pem"
+    public_key_path: Path = BASE_DIR / "certs" / "public_key.pem"
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         case_sensitive=False,  # чувствительность к регистрам
@@ -41,6 +52,7 @@ class Settings(BaseSettings):
     run: RunConfig = RunConfig()
     api: ApiPrefix = ApiPrefix()
     db: DatabaseConfig
+    auth: AuthJWT = AuthJWT()
 
 
 settings = Settings()

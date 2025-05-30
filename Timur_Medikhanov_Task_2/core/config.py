@@ -4,7 +4,7 @@ from pydantic import BaseModel, PostgresDsn
 
 class RunConfig(BaseModel):
     host: str = "127.0.0.1"
-    post: str = 222
+    port: str = 222
 
 
 class UsersPrefix(BaseModel):
@@ -13,14 +13,14 @@ class UsersPrefix(BaseModel):
 
 class DatabaseConfig(BaseSettings):
     url: PostgresDsn
-    echo: bool
+    echo: bool = True
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        case_sensitive=False,
-        env_nested_delimiter="__",
-        env_prefix="USER_CONFIG_",
+        case_sensitive=False,  # чувствительность к регистрам
+        env_nested_delimiter="__",  # это деления как путь будет
+        env_prefix="USER_CONFIG__",
         env_file=".env",
     )
     users: UsersPrefix = UsersPrefix()
