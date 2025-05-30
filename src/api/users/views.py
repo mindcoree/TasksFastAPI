@@ -1,8 +1,9 @@
 from typing import Sequence
 
 from fastapi import APIRouter, status
-from src.api.users.dependencies import UserServiceDep
-from src.api.users.schemas import UserRead, UserCraete
+from .dependencies import UserServiceDep
+from .schemas import UserRead, UserCraete
+
 
 router = APIRouter(tags=["users"])
 

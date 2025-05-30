@@ -1,7 +1,7 @@
 from typing import Sequence
 
-from src.api.users.repository import UserRepository
-from src.api.users.schemas import UserRead, UserCraete
+from .repository import UserRepository
+from .schemas import UserRead, UserCraete
 
 
 class UserService:

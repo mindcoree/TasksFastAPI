@@ -23,6 +23,7 @@ main_app = FastAPI(
     lifespan=lifespan,
     default_response_class=ORJSONResponse,
 )
+
 main_app.include_router(api_router, prefix=settings.api.prefix)
 
 
