@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from core.db_helper import db_helper
 from core.config import settings
+from users.views import router as users_router
 
 
 @asynccontextmanager
@@ -13,6 +14,8 @@ async def lifespan(app: FastAPI):
 
 main_app = FastAPI()
 
+
+main_app.include_router(users_router)
 
 if __name__ == "__main__":
     uvicorn.run(

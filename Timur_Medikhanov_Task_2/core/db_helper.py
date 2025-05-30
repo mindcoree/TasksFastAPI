@@ -1,17 +1,18 @@
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Annotated
+from .config import settings
+from fastapi import Depends
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
     AsyncEngine,
     create_async_engine,
     async_sessionmaker,
 )
-from .config import settings
 
 
 class DatabaseHelper:
     def __init__(
         self,
-        url,
+        url: str,
         echo: bool = True,
     ):
 
@@ -31,6 +32,8 @@ class DatabaseHelper:
 
 
 db_helper = DatabaseHelper(
-    url=settings.db.url,
+    url=str(settings.db.url),
     echo=settings.db.echo,
 )
+
+SessionDep = Annotated[AsyncSession, Depends(db_helper.session_getter)]
