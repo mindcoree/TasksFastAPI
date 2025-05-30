@@ -1,8 +1,25 @@
-Issue RSA private key + public key pair
-# Generate an RSA private key, of size 2048
+# Сертификаты для проекта
 
+В этой папке хранятся ключи и сертификаты, необходимые для работы приложения.
 
+## Генерация пары ключей RSA
+
+Для генерации приватного и публичного ключа используйте следующие команды:
+
+```bash
+# Генерация приватного ключа (2048 бит)
 openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
 
-# Extract the public key from the key pair, which can be used in a certificate
+# Генерация публичного ключа на основе приватного
 openssl rsa -pubout -in private_key.pem -out public_key.pem
+```
+
+### Описание файлов
+
+- `private_key.pem` — приватный ключ, используемый для подписи/расшифровки.
+- `public_key.pem` — публичный ключ, используемый для проверки подписи/шифрования.
+
+**Внимание:**  
+Никогда не публикуйте приватный ключ (`private_key.pem`). Публичный ключ (`public_key.pem`) может быть размещён в публичном доступе.
+
+---
