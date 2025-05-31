@@ -22,7 +22,7 @@ def encode_jwt(
     payload: dict,
     private_key: str = get_private_key(),
     algorithm: str = settings.auth.algorithm,
-    expire_minute: str = settings.auth.expire_min,
+    expire_minute: int = settings.auth.expire_min,
 ):
     now = datetime.now(timezone.utc)
     expire = now + timedelta(minutes=expire_minute)
