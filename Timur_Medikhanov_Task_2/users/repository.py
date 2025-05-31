@@ -25,7 +25,7 @@ async def sign_in(session: AsyncSession, sign_in_user: UserLogin) -> dict:
             detail="The user is unauthorized",
         )
 
-    verify_password = auth.verif_password(
+    verify_password = auth.verify_password(
         password=sign_in_user.password,
         hashed_password=user.password,
     )
