@@ -2,9 +2,6 @@ import bcrypt
 import jwt
 from datetime import datetime, timezone, timedelta
 from functools import lru_cache
-
-from sqlalchemy.sql.coercions import expect
-
 from core.config import settings
 
 
