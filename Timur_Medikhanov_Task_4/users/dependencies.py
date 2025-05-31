@@ -1,16 +1,17 @@
 from typing import Annotated
-from fastapi import Depends
-
-from users.schemas import UserCreate, UserLogin, ResponseUser
+from fastapi import Depends, Form, HTTPException, status
 from sqlalchemy import select, Result
 
+from .schemas import UserCreate, UserLogin, ResponseUser
 from utils import auth
 from .models import User
-from fastapi import HTTPException, status
 from core.db_helper import SessionDep
 
 
-async def check_unique_user(session: SessionDep, check_user: UserCreate) -> UserCreate:
+async def check_unique_user(
+    session: SessionDep,
+    check_user: Annotated[UserCreate, Form()],
+) -> UserCreate:
     users = select(User).where(check_user.username == User.username)
     result: Result = await session.execute(users)
     existing_user = result.scalars().first()
@@ -25,7 +26,9 @@ async def check_unique_user(session: SessionDep, check_user: UserCreate) -> User
 CheckUniqueUsers = Annotated[UserCreate, Depends(check_unique_user)]
 
 
-async def verify_credentials(session: SessionDep, sign_in_user: UserLogin) -> UserLogin:
+async def verify_credentials(
+    session: SessionDep, sign_in_user: Annotated[UserLogin, Form()]
+) -> UserLogin:
     users = select(User).where(User.username == sign_in_user.username)
     result: Result = await session.execute(users)
     user = result.scalars().first()

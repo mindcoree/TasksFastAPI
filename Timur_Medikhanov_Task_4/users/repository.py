@@ -1,8 +1,7 @@
-from sqlalchemy import select, Result
-from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from utils import auth
-from .schemas import UserLogin, ResponseUser, UserCreate, AccessToken
+from .schemas import ResponseUser, UserCreate, AccessToken
 from .models import User
 
 
