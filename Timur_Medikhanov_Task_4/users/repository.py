@@ -14,7 +14,7 @@ async def create_users(session: AsyncSession, user_in: UserCreate) -> ResponseUs
     return ResponseUser(id=new_user.id, username=new_user.username)
 
 
-async def sing_in(user_login: ResponseUser) -> AccessToken:
+async def sign_in(user_login: ResponseUser) -> AccessToken:
     payload = {
         "sub": user_login.id,
         "username": user_login.username,
