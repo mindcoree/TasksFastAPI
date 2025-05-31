@@ -1,15 +1,13 @@
 from typing import Annotated
 from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession
 from users.schemas import UserCreate
 from sqlalchemy import select, Result
 from .models import User
 from fastapi import HTTPException, status
+from core.db_helper import SessionDep
 
 
-async def check_unique_user(
-    session: AsyncSession, check_user: UserCreate
-) -> UserCreate:
+async def check_unique_user(session: SessionDep, check_user: UserCreate) -> UserCreate:
     users = select(User).where(check_user.username == User.username)
     result: Result = await session.execute(users)
     existing_user = result.scalars().first()
