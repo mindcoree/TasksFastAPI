@@ -9,8 +9,8 @@ router = APIRouter(prefix="/users", tags=["Users"])
 
 
 @router.post("/login", response_model=AccessToken)
-async def login(user: VerificationUser):
-    return await repo.sign_in(user_login=user)
+async def login(credentials: VerificationUser):
+    return await repo.sign_in(user_login=credentials)
 
 
 @router.post(
