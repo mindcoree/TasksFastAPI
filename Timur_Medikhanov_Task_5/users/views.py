@@ -11,16 +11,6 @@ router = APIRouter(prefix="/users", tags=["Users"])
 @router.post("/login", response_model=AccessToken)
 async def login(credentials: VerificationUser, response: Response):
     access_token = await repo.sign_in(user_login=credentials)
-
-    response.set_cookie(
-        key="access_token",
-        value=access_token.token,
-        httponly=True,  # Защита от доступа через JavaScript
-        secure=True,  # Только для HTTPS
-        samesite="lax",  # Защита от CSRF
-        max_age=30 * 60,
-    )
-
     return access_token
 
 
