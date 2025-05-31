@@ -15,7 +15,7 @@ def get_private_key() -> str:
 
 @lru_cache(maxsize=1)
 def get_public_key() -> str:
-    return settings.auth.publib_key.read_text()
+    return settings.auth.public_key.read_text()
 
 
 def encode_jwt(

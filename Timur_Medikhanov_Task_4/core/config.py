@@ -21,7 +21,7 @@ class DatabaseConfig(BaseSettings):
 
 class AuthJWT(BaseModel):
     private_key: str = BASE_DIR / "certs" / "private_key.pem"
-    publib_key: str = BASE_DIR / "certs" / "public_key.pem"
+    public_key: str = BASE_DIR / "certs" / "public_key.pem"
     algorithm: str = "RS256"
     expire_min: int = 30
 
