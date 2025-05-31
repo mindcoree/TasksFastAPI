@@ -1,7 +1,7 @@
 from typing import Sequence
 
 from .repository import UserRepository
-from .schemas import UserRead, UserCraete
+from .schemas import UserRead, UserCreate
 
 
 class UserService:
@@ -12,6 +12,6 @@ class UserService:
         users = await self.repo.get_users()
         return users
 
-    async def created_user(self, user_in) -> UserCraete:
+    async def created_user(self, user_in) -> UserCreate:
         create_user = await self.repo.create_user(user_in)
         return create_user

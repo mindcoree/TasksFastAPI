@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 
 class UserBase(BaseModel):
@@ -7,9 +7,15 @@ class UserBase(BaseModel):
     bar: int
 
 
-class UserCraete(UserBase):
+class UserCreate(UserBase):
     pass
 
 
 class UserRead(UserBase):
     id: int
+
+
+class UserScheme(BaseModel):
+    username: str
+    password: bytes
+    email: EmailStr

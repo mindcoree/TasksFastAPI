@@ -2,7 +2,7 @@ from fastapi import Depends, FastAPI
 from typing import Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from .schemas import UserCraete
+from .schemas import UserCreate
 from .models import User
 
 
@@ -15,7 +15,7 @@ class UserRepository:
         result = await self.session.scalars(stms)
         return result.all()
 
-    async def create_user(self, user_in: UserCraete) -> User:
+    async def create_user(self, user_in: UserCreate) -> User:
         create_user = User(**user_in.model_dump())
         self.session.add(create_user)
         await self.session.commit()
