@@ -10,7 +10,7 @@ router = APIRouter(prefix="/users", tags=["Users"])
 
 @router.post("/login")
 async def login(user: VerificationUser):
-    return await repo.sing_in(user_login=user)
+    return await repo.sign_in(user_login=user)
 
 
 @router.post(
