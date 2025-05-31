@@ -19,21 +19,13 @@ async def sign_in(session: AsyncSession, sign_in_user: UserLogin) -> dict:
     result: Result = await session.execute(users)
     user = result.scalars().first()
 
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="The user is unauthorized",
-        )
-
-    verify_password = auth.verify_password(
+    if not user or not auth.verify_password(
         password=sign_in_user.password,
         hashed_password=user.password,
-    )
-
-    if not verify_password:
+    ):
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Not the right password",
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid username or password",
         )
 
     return {
