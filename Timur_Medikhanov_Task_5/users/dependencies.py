@@ -6,6 +6,7 @@ from utils import auth
 from .models import User
 from core.db_helper import SessionDep
 from jwt.exceptions import InvalidTokenError
+from users import repository as repo
 
 
 async def check_unique_user(
@@ -29,10 +30,7 @@ CheckUniqueUsers = Annotated[UserCreate, Depends(check_unique_user)]
 async def verify_credentials(
     session: SessionDep, sign_in_user: Annotated[UserLogin, Form()]
 ) -> UserLogin:
-    users = select(User).where(User.username == sign_in_user.username)
-    result: Result = await session.execute(users)
-    user = result.scalars().first()
-
+    user = await repo.get_user(session=session, user=sign_in_user)
     if not user or not auth.verify_password(
         password=sign_in_user.password,
         hashed_password=user.password,
@@ -52,15 +50,16 @@ async def get_current_user(request: Request) -> ResponseUser:
     token = request.cookies.get("access_token")
     if not token:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="No token provided"
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="No token provided",
         )
-
     try:
-        payload = auth.decode_jwt(token)
+        payload = auth.decode_jwt(token=token)
         return ResponseUser(id=payload["sub"], username=payload["username"])
     except InvalidTokenError:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token"
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token",
         )
 
 
