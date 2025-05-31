@@ -2,15 +2,15 @@ from fastapi import APIRouter, status
 from core.db_helper import SessionDep
 from users import repository as repo
 from .schemas import UserLogin, UserCreate, ResponseUser
-from .models import User
+from .dependencies import VerificationUser
 from .dependencies import CheckUniqueUsers
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
 @router.post("/login")
-async def user_login(session: SessionDep, user: UserLogin):
-    return await repo.sign_in(session=session, sign_in_user=user)
+async def login(user: VerificationUser):
+    return await repo.sing_in(user_login=user)
 
 
 @router.post(
