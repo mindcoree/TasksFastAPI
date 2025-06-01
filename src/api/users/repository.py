@@ -1,8 +1,7 @@
 from typing import Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, Result
-from utils import auth
-from .schemas import ResponseUser, UserCreate, AccessToken, UserLogin
+from sqlalchemy import select
+from .schemas import UserCreate
 from .models import User
 
 

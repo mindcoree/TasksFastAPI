@@ -34,11 +34,11 @@ async def verify_credentials(
 VerificationUser = Annotated[ResponseUser, Depends(verify_credentials)]
 
 
-async def get_current_user(
+def get_current_user(
     request: Request,
     user_auth_service: UserAuthServiceDep,
 ) -> ResponseUser:
-    return await user_auth_service.get_current_user(request=request)
+    return user_auth_service.get_current_user(request=request)
 
 
 CurrentUser = Annotated[ResponseUser, Depends(get_current_user)]

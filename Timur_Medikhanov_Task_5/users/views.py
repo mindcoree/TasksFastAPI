@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Response, status
-from .schemas import AccessToken, ResponseUser
+from .schemas import TokenInfo, ResponseUser
 from .dependencies import (
     UserAuthServiceDep,
     VerificationUser,
@@ -10,13 +10,13 @@ from .dependencies import (
 router = APIRouter()
 
 
-@router.post("/login", response_model=AccessToken)
-async def login(
+@router.post("/login", response_model=TokenInfo)
+def login(
     credentials: VerificationUser,
     response: Response,
     user_auth_service: UserAuthServiceDep,
-):
-    access_token = await user_auth_service.sign_in(user_login=credentials)
+) -> TokenInfo:
+    access_token = user_auth_service.sign_in(user_login=credentials)
 
     response.set_cookie(
         key="access_token",

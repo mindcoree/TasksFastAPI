@@ -16,6 +16,7 @@ class ResponseUser(BaseModel):
     username: str
 
 
-class AccessToken(BaseModel):
+class TokenInfo(BaseModel):
     token: str
+    refresh: str | None = None
     token_type: str

@@ -15,9 +15,8 @@ class UserRepository:
         user = result.scalars().one_or_none()
         return user
 
-    async def create_users(self, user_in: UserCreate) -> ResponseUser:
-        hash_password = auth.hash_password(user_in.password)
-        new_user = User(username=user_in.username, password=hash_password)
+    async def create(self, username: str, password_hash: str) -> User:
+        new_user = User(username=username, password=password_hash)
         self.session.add(new_user)
         await self.session.commit()
-        return ResponseUser(id=new_user.id, username=new_user.username)
+        return new_user
