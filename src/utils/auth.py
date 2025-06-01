@@ -1,42 +1,47 @@
-import jwt
 import bcrypt
+import jwt
 from datetime import datetime, timezone, timedelta
+from functools import lru_cache
 from core.config import settings
+
+
+@lru_cache(maxsize=1)
+def get_private_key() -> str:
+    return settings.auth.private_key.read_text()
+
+
+@lru_cache(maxsize=1)
+def get_public_key() -> str:
+    return settings.auth.public_key.read_text()
 
 
 def encode_jwt(
     payload: dict,
-    private_key: str = settings.auth.private_key_path.read_text(),
-    algorithm=settings.auth.algorithm,
-    expire_minutes: int = settings.auth.access_token_expire_min,
+    private_key: str = get_private_key(),
+    algorithm: str = settings.auth.algorithm,
+    expire_minute: int = settings.auth.expire_min,
 ):
     now = datetime.now(timezone.utc)
-    expire = now + timedelta(minutes=expire_minutes)
+    expire = now + timedelta(minutes=expire_minute)
 
     payload.update(
         exp=int(expire.timestamp()),
         iat=int(now.timestamp()),
     )
 
-    encoded = jwt.encode(
-        payload,
-        private_key,
+    return jwt.encode(
+        payload=payload,
+        key=private_key,
         algorithm=algorithm,
     )
-    return encoded
 
 
 def decode_jwt(
-    token,
-    public_key: str = settings.auth.public_key_path.read_text(),
-    algorithms: str = settings.auth.algorithm,
+    token: str,
+    public_key: str = get_public_key(),
+    algorithm: str = settings.auth.algorithm,
 ):
-    decoded = jwt.decode(
-        jwt=token,
-        key=public_key,
-        algorithms=[algorithms],
-    )
-    return decoded
+    return jwt.decode(jwt=token, key=public_key, algorithms=[algorithm])
 
 
 def hash_password(password: str) -> str:

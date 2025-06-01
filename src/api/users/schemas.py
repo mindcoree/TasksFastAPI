@@ -1,21 +1,26 @@
-from pydantic import BaseModel, ConfigDict, EmailStr
+from typing import Annotated
+
+from pydantic import BaseModel, Field
 
 
-class UserBase(BaseModel):
-    username: str
-    foo: int
-    bar: int
+class UserCreate(BaseModel):
+    username: Annotated[str, Field(min_length=3, max_length=40)]
+    password: Annotated[str, Field(min_length=8, max_length=40)]
 
 
-class UserCreate(UserBase):
+class UserLogin(UserCreate):
     pass
 
 
-class UserRead(UserBase):
+class ResponseUser(BaseModel):
     id: int
-
-
-class UserScheme(BaseModel):
     username: str
-    password: bytes
-    email: EmailStr
+
+
+class AccessToken(BaseModel):
+    token: str
+    token_type: str
+
+
+class UserRead(UserLogin):
+    pass

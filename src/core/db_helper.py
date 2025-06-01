@@ -1,5 +1,6 @@
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Annotated
 from .config import settings
+from fastapi import Depends
 from sqlalchemy.ext.asyncio import (
     create_async_engine,
     AsyncEngine,
@@ -48,3 +49,5 @@ db_helper = DatabaseHelper(
     pool_size=settings.db.pool_size,
     max_overflow=settings.db.max_overflow,
 )
+
+SessionDep = Annotated[AsyncSession, Depends(db_helper.session_getter)]
