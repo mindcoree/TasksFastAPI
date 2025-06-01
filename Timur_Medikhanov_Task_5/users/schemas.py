@@ -1,5 +1,4 @@
 from typing import Annotated
-
 from pydantic import BaseModel, Field
 
 
@@ -10,7 +9,6 @@ class UserCreate(BaseModel):
 
 class UserLogin(UserCreate):
     pass
-
 
 
 class ResponseUser(BaseModel):
