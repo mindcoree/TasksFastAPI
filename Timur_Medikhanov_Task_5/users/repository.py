@@ -12,7 +12,7 @@ class UserRepository:
     async def get_user(self, get_user: UserLogin) -> User:
         users = select(User).where(User.username == get_user.username)
         result: Result = await self.session.execute(users)
-        user = result.scalars().first()
+        user = result.scalars().one_or_none()
         return user
 
     async def create_users(self, user_in: UserCreate) -> ResponseUser:
