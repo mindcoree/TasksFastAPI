@@ -1,8 +1,8 @@
-"""base
+"""empty message
 
-Revision ID: bb7f01b4c531
+Revision ID: 32d959cdfdfd
 Revises:
-Create Date: 2025-05-31 20:21:29.456274
+Create Date: 2025-06-03 02:00:31.699309
 
 """
 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = "bb7f01b4c531"
+revision: str = "32d959cdfdfd"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -27,6 +27,12 @@ def upgrade() -> None:
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("username", sa.String(), nullable=False),
         sa.Column("password", sa.String(), nullable=False),
+        sa.Column(
+            "role",
+            sa.Enum("admin", "user", "guest", name="role"),
+            server_default=sa.text("'guest'"),
+            nullable=False,
+        ),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("username"),
     )
