@@ -1,5 +1,6 @@
-from typing import Annotated
+from typing import Annotated, Optional
 from pydantic import BaseModel, Field
+from .models import Role
 
 
 class UserCreate(BaseModel):
@@ -16,7 +17,19 @@ class ResponseUser(BaseModel):
     username: str
 
 
+class UserSchemas(BaseModel):
+    id: int | str
+    username: str
+    role: Optional[Role] = None
+
+
 class TokenInfo(BaseModel):
-    token: str
+    access: str
     refresh: str | None = None
     token_type: str
+
+
+class UserPayload(BaseModel):
+    sub: str
+    username: str
+    role: Optional[Role] = None
