@@ -1,8 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, Result
-from utils import auth
-from .schemas import ResponseUser, UserCreate, UserLogin
-from .models import User
+from .schemas import UserLogin
+from .models import User, Role
 
 
 class UserRepository:
@@ -16,7 +15,10 @@ class UserRepository:
         return user
 
     async def create(self, username: str, password_hash: str) -> User:
-        new_user = User(username=username, password=password_hash)
+        new_user = User(username=username, password=password_hash, role=Role.user)
         self.session.add(new_user)
         await self.session.commit()
         return new_user
+
+    async def get_user_by_id(self, user_id) -> User:
+        return await self.session.get(User, user_id)
