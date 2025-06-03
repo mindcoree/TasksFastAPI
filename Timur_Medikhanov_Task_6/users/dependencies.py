@@ -36,7 +36,7 @@ VerifiedUser = Annotated[UserScheme, Depends(verify_credentials)]
 
 async def access_token_payload(
     request: Request, response: Response, user_auth_service: UserAuthServiceDep
-) -> UserScheme:
+) -> dict:
     payload = getattr(request.state, "user_payload", None)
     if payload:
         return payload
@@ -56,10 +56,10 @@ async def access_token_payload(
     return payload
 
 
-AccessTokenPyload = Annotated[dict, Depends(access_token_payload)]
+AccessTokenPayload = Annotated[dict, Depends(access_token_payload)]
 
 
-async def current_user(payload: AccessTokenPyload) -> dict:
+async def current_user(payload: AccessTokenPayload) -> dict:
     role = payload.get("role")
     if role != "user":
         raise HTTPException(
@@ -72,7 +72,7 @@ async def current_user(payload: AccessTokenPyload) -> dict:
 CurrentUser = Annotated[dict, Depends(current_user)]
 
 
-async def current_admin(payload: AccessTokenPyload) -> dict:
+async def current_admin(payload: AccessTokenPayload) -> dict:
     role = payload.get("role")
     if role != "admin":
         raise HTTPException(

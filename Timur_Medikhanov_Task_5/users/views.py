@@ -53,9 +53,9 @@ async def user_register(
     return await user_auth_service.create_user(user_in=reg_user)
 
 
-@router.get("/me", response_model=UserSchemas)
+@router.get("/me", response_model=UserPayload)
 async def info_user(current_user: CurrentUser):
-    return UserPayload(**current_user)
+    return current_user
 
 
 @router.get("/me/admin", response_model=UserPayload)

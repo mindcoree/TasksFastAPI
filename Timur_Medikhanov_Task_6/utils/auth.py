@@ -69,7 +69,7 @@ async def hash_password(password: str) -> str:
 
 
 async def verify_password(password: str, hashed_password: str) -> bool:
-    return asyncio.to_thread(
+    return await asyncio.to_thread(
         bcrypt.checkpw,
         password=password.encode(),
         hashed_password=hashed_password.encode(),

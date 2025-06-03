@@ -95,5 +95,5 @@ class UserAuthService:
 
         return user
 
-    async def get_list_user(self) -> UserScheme:
+    async def get_list_user(self) -> list[UserScheme]:
         return await self.repo.get_list_users()
