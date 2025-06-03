@@ -15,8 +15,7 @@ async def verify_jwt_middleware(
 ):
     public_paths = {"/login", "/register", "/refresh", "/docs", "/openapi.json"}
     if request.url.path in public_paths:
-        response = await call_next(request)
-        return response
+        return await call_next(request)
 
     token = request.cookies.get("access_token")
     request.state.user_payload = None
@@ -31,6 +30,4 @@ async def verify_jwt_middleware(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid access token",
             )
-
-    response = await call_next(request)
-    return response
+    return await call_next(request)

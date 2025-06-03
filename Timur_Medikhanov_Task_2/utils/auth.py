@@ -13,3 +13,4 @@ def verify_password(password: str, hashed_password: str) -> bool:
         password=password.encode(),
         hashed_password=hashed_password.encode(),
     )
+

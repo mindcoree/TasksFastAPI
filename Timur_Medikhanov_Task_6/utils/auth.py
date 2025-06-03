@@ -1,10 +1,11 @@
+import asyncio
 import bcrypt
 import jwt
 from datetime import datetime, timezone, timedelta
 from functools import lru_cache
 from core.config import settings
-from type.jwt import TOKEN_TYPE_FIELD, REFRESH_TOKEN_TYPE, ACCESS_TOKEN_TYPE
-from users.schemas import UserSchemas
+from users.schemas import UserScheme
+from type.jwt import TOKEN_TYPE_FIELD, ACCESS_TOKEN_TYPE, REFRESH_TOKEN_TYPE
 from fastapi import Response
 
 
@@ -18,21 +19,20 @@ def get_public_key() -> str:
     return settings.auth.public_key.read_text()
 
 
-import asyncio
-
-
 async def encode_jwt(
     payload: dict,
     private_key: str = get_private_key(),
     algorithm: str = settings.auth.algorithm,
-    expire_minutes: int = settings.auth.access_token_expire_min,
+    expire_minute: int = settings.auth.access_token_expire_min,
     expire_timedelta: timedelta | None = None,
 ) -> str:
+
     now = datetime.now(timezone.utc)
     if expire_timedelta:
         expire = now + expire_timedelta
     else:
-        expire = now + timedelta(minutes=expire_minutes)
+        expire = now + timedelta(minutes=expire_minute)
+
     payload.update(
         exp=int(expire.timestamp()),
         iat=int(now.timestamp()),
@@ -50,13 +50,17 @@ async def decode_jwt(
     public_key: str = get_public_key(),
     algorithm: str = settings.auth.algorithm,
 ) -> dict:
+
     return await asyncio.to_thread(
-        jwt.decode, jwt=token, key=public_key, algorithms=[algorithm]
+        jwt.decode,
+        jwt=token,
+        key=public_key,
+        algorithms=[algorithm],
     )
 
 
 async def hash_password(password: str) -> str:
-    salt = await asyncio.to_thread(bcrypt.gensalt)
+    salt = bcrypt.gensalt()
     password_bytes: bytes = password.encode()
     hashed_password: bytes = await asyncio.to_thread(
         bcrypt.hashpw, password_bytes, salt
@@ -65,7 +69,7 @@ async def hash_password(password: str) -> str:
 
 
 async def verify_password(password: str, hashed_password: str) -> bool:
-    return await asyncio.to_thread(
+    return asyncio.to_thread(
         bcrypt.checkpw,
         password=password.encode(),
         hashed_password=hashed_password.encode(),
@@ -73,33 +77,32 @@ async def verify_password(password: str, hashed_password: str) -> bool:
 
 
 async def create_jwt(
-    token_data: dict,
+    token_data: str,
     token_type: str,
-    expire_minutes: int = settings.auth.access_token_expire_min,
+    expire_minutes: str = settings.auth.access_token_expire_min,
     expire_timedelta: timedelta | None = None,
 ) -> str:
+
     payload = {TOKEN_TYPE_FIELD: token_type}
     payload.update(token_data)
     return await encode_jwt(
         payload=payload,
-        expire_minutes=expire_minutes,
+        expire_minute=expire_minutes,
         expire_timedelta=expire_timedelta,
     )
 
 
-async def create_access_token(user_info: UserSchemas) -> str:
-    payload = create_payload(payload_user=user_info)
+async def create_access_token(user_info: UserScheme) -> str:
+    payload = create_payload(user_payload=user_info)
     return await create_jwt(
-        token_type=ACCESS_TOKEN_TYPE,
         token_data=payload,
+        token_type=ACCESS_TOKEN_TYPE,
         expire_minutes=settings.auth.access_token_expire_min,
     )
 
 
-async def create_refresh_token(user_info: UserSchemas) -> str:
-    payload = {
-        "sub": str(user_info.id),
-    }
+async def create_refresh_token(user_info: UserScheme) -> str:
+    payload = {"sub": str(user_info.id)}
     return await create_jwt(
         token_type=REFRESH_TOKEN_TYPE,
         token_data=payload,
@@ -107,13 +110,12 @@ async def create_refresh_token(user_info: UserSchemas) -> str:
     )
 
 
-def create_payload(payload_user: UserSchemas) -> dict:
-    payload = {
-        "sub": str(payload_user.id),
-        "username": payload_user.username,
-        "role": payload_user.role,
+def create_payload(user_payload: UserScheme) -> dict:
+    return {
+        "sub": str(user_payload.id),
+        "username": user_payload.username,
+        "role": user_payload.role,
     }
-    return payload
 
 
 async def set_token_cookie(
@@ -121,9 +123,9 @@ async def set_token_cookie(
     key: str,
     value: str,
     max_age: int,
-    httponly: bool = True,
-    samesite: str = "lax",
-    secure: bool = False,
+    httponly: bool = True,  # Защита от доступа через JavaScript
+    secure: bool = True,  # Только для HTTPS
+    samesite: str = "lax",  # Защита от CSRF
 ) -> None:
     response.set_cookie(
         key=key,
