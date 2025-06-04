@@ -32,7 +32,7 @@ async def login(
         response=response,
         key="refresh_token",
         value=refresh_token,
-        max_age=settings.auth.refresh_expire_days * 24 * 60,  # * 60 для тест ,
+        max_age=settings.auth.refresh_expire_days * 24 * 60,  # * 60 для тест
     )
     return TokenInfo(access=access_token, refresh=refresh_token)
 
