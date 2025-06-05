@@ -6,10 +6,8 @@ from api.common.enums import Role
 
 
 class AdminAuthService(BaseAuthService[Admin]):
-    repo: AdminAuthRepository[Admin]
-
-    def __init__(self, repository: AdminAuthRepository[Admin]):
+    def __init__(self, repository: AdminAuthRepository):
         super().__init__(repository=repository)
 
     async def create_admin(self, admin: AdminCreate) -> Admin:
-        return await super().create(auth_info=admin, role=Role.ADMIN)
+        return await self.create_auth(auth_in=admin, role=Role.ADMIN)

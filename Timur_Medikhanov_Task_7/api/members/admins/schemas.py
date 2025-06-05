@@ -1,16 +1,15 @@
-from pydantic import BaseModel, EmailStr, Field
-from typing import Annotated
+from pydantic import BaseModel
 from type.annotated import password, login
 
 
-class UserBase(BaseModel):
+class AdminBase(BaseModel):
     id: int
     login: login
 
 
-class AdminCreate(UserBase):
+class AdminCreate(AdminBase):
     password: password
 
 
-class AdminInfo(AdminCreate):
-    id: int
+class AdminInfo(AdminBase):
+    pass

@@ -5,7 +5,7 @@ from core.config import settings
 from .schemas import TokenInfo, UserCreate, UserInfo, UserCredentials
 from .dependencies import (
     UserAuthServiceDep,
-    CurrentUser,
+    UserRestricted,
     UserAuthValidatorDep,
 )
 from utils import auth
@@ -52,6 +52,6 @@ async def user_register(
 
 
 @router.get("/info_user", response_model=UserInfo)
-async def info_user(auth_service: UserAuthServiceDep, current_user: CurrentUser):
+async def info_user(auth_service: UserAuthServiceDep, current_user: UserRestricted):
     user_id = int(current_user.get("sub"))
-    return await auth_service.get_object_by_id(id_=user_id)
+    return await auth_service.get_by_id(user_id)

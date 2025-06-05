@@ -6,11 +6,11 @@ from type.annotated import password, login
 from api.common.enums import Role
 
 
-class UserBase(BaseModel):
+class UserLogin(BaseModel):
     login: login
 
 
-class UserCredentials(UserBase):
+class UserCredentials(UserLogin):
     password: password
 
 
@@ -22,7 +22,6 @@ class UserCreate(UserCredentials):
             examples=["user@example.com"],
         ),
     ]
-    password: password
 
 
 class TokenInfo(BaseModel):
@@ -31,6 +30,6 @@ class TokenInfo(BaseModel):
     token_storage: str = "Cookie"
 
 
-class UserInfo(UserBase):
+class UserInfo(UserLogin):
     id: int
     role: Role

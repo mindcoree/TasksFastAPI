@@ -16,19 +16,28 @@ async def get_admin_auth_service(session: SessionDep) -> AdminAuthService:
 
 AdminAuthServiceDep = Annotated[AdminAuthService, Depends(get_admin_auth_service)]
 
+# async def get_admin_payload(
+#     request: Request,
+#     response: Response,
+#     service: AdminAuthServiceDep,
+# ) -> :
+#     return await service.access_token_payload(request,response)
+#
+#
+# AccessTokenPayloadAdmin = Annotated[dict,Depends(get_admin_payload)]
 
 # 4) Функция-зависимость для AdminAccessTokenPayload
+
 _get_admin_access_token_payload = make_access_token_dependency(get_admin_auth_service)
 AccessTokenPayloadAdmin = Annotated[dict, Depends(_get_admin_access_token_payload)]
 
 
-async def current_admin(payload: AccessTokenPayloadAdmin) -> dict:
-    role = payload.get("role")
-    if role != "admins":
+async def restrict_to_admin(payload: AccessTokenPayloadAdmin) -> dict:
+    if payload.get("role") != "admin":
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail="forbidden admins"
+            status_code=status.HTTP_403_FORBIDDEN, detail="Admin access required"
         )
     return payload
 
 
-CurrentAdmin = Annotated[dict, Depends(current_admin)]
+AdminRestricted = Annotated[dict, Depends(restrict_to_admin)]

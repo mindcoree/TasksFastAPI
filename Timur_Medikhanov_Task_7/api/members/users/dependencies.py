@@ -31,7 +31,7 @@ _get_user_access_token_payload = make_access_token_dependency(get_user_auth_serv
 AccessTokenPayloadUser = Annotated[dict, Depends(_get_user_access_token_payload)]
 
 
-async def current_user(payload: AccessTokenPayloadUser) -> dict:
+async def restrict_to_user(payload: AccessTokenPayloadUser) -> dict:
     role = payload.get("role")
     if role != "user":
         raise HTTPException(
@@ -41,4 +41,4 @@ async def current_user(payload: AccessTokenPayloadUser) -> dict:
     return payload
 
 
-CurrentUser = Annotated[dict, Depends(current_user)]
+UserRestricted = Annotated[dict, Depends(restrict_to_user)]
