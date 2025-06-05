@@ -8,7 +8,7 @@ from api.common.services import BaseAuthService
 T = TypeVar("T", bound=BaseModel)
 
 
-def validations_token_type(token_type: str, payload: dict):
+async def validations_token_type(token_type: str, payload: dict):
     current_token_type = payload.get(TOKEN_TYPE_FIELD)
     if current_token_type != token_type:
         raise HTTPException(

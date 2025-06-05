@@ -1,10 +1,18 @@
 from datetime import datetime
-from typing import Annotated
-from sqlalchemy.orm import Mapped, mapped_column
+from typing import Annotated, Type
+from sqlalchemy.orm import mapped_column
 from sqlalchemy import DateTime, func
-from pydantic import Field, StringConstraints
+from pydantic import Field, StringConstraints, BaseModel
+from fastapi import Form
+
+
+def form_model(schema: Type[BaseModel]) -> Annotated[BaseModel, Form()]:
+    """Wraps a Pydantic model with Form dependency for FastAPI."""
+    return Annotated[schema, Form()]
+
 
 ID_PK = Annotated[int, mapped_column(primary_key=True)]
+
 created_at = Annotated[
     datetime,
     mapped_column(

@@ -2,6 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import BaseModel, PostgresDsn
 from pathlib import Path
 
+
 BASE_DIR = Path(__file__).parent.parent
 
 
@@ -31,6 +32,7 @@ class MembersPrefix(BaseModel):
 class ApiPrefix(BaseModel):
     prefix: str = "/api"
     members: MembersPrefix = MembersPrefix()
+    products: ProductPrefix = ProductPrefix()
 
 
 class DatabaseConfig(BaseModel):
