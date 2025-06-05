@@ -29,7 +29,7 @@ def make_access_token_dependency(
         response: Response,
         service: TService = Depends(get_service_dep),
     ) -> dict:
-        # Предполагаем, что у service есть метод `access_token_payload(request, response)`
+
         return await service.access_token_payload(request, response)
 
     return _getter

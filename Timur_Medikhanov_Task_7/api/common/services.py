@@ -11,52 +11,61 @@ class BaseService(Generic[T]):
     def __init__(self, repository: BaseRepository[T]):
         self.repo: BaseRepository[T] = repository
 
-    async def create(self, **data) -> T:
-        return await self.repo.create(**data)
+    @staticmethod
+    async def ensure_unique(instance: T, field_name: str) -> None:
+        if instance:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"{field_name} already taken",
+            )
 
-    async def get_object_by_id(self, id_: int) -> T:
-        instance = await self.repo.get_by_id(id_)
+    async def get_by_id(self, id_instance: int) -> T:
+        return await self.repo.get_by_id(id_instance)
+
+    async def ensure_instance_exists_by_id(self, id_instance) -> None:
+        instance = await self.get_by_id(id_instance)
         if not instance:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"{T} is not found by id: {id_} !",
+                detail=f"{T} is not found by id: {id_instance} !",
             )
+
+    async def update_by_id(self, id_instance, data) -> T:
+        await self.ensure_instance_exists_by_id(id_instance=id_instance)
+        instance = await self.repo.update(id_=id_instance, **data)
         return instance
 
+    async def delete_by_id(self, id_delete):
+        await self.ensure_instance_exists_by_id(id_delete)
+        return await self.repo.delete_by_("id", value=id_delete)
 
-class BaseAuthService(BaseService[T], Generic[T]):
-    repo: BaseAuthRepository[T]
 
+class BaseAuthService(Generic[T]):
     def __init__(self, repository: BaseAuthRepository[T]):
-        super().__init__(repository=repository)
+        self.repo: BaseAuthRepository[T] = repository
 
-    async def create(self, auth_info, role: Role) -> T:
-        hash_password = await auth.hash_password(auth_info.password)
-        instance = await super().create(
-            login=auth_info.login,
-            email=auth_info.email,
-            hash_password=hash_password,
-            role=role,
-        )
-        return instance
+    async def create_auth(self, auth_in, role: Role) -> T:
+        hash_password = await auth.hash_password(auth_in.password)
+        data = auth_in.model_dump(exclude={"password"})
+        data.update({"hash_password": hash_password, "role": role})
+        return await self.repo.create(**data)
 
-    async def verification_email(self, email: str) -> T | None:
+    @staticmethod
+    async def ensure_unique_verifications(instance: T, field_name: str):
+        if instance:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"{field_name} already taken",
+            )
+        return True
+
+    async def verification_email(self, email: str) -> bool:
         existing = await self.repo.get_by_email(email)
-        if existing:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="Email has already been taken.",
-            )
-        return True
+        await self.ensure_unique_verifications(existing, field_name=email)
 
-    async def verification_login(self, login: str) -> T | None:
+    async def verification_login(self, login: str) -> bool:
         existing = await self.repo.get_by_login(login)
-        if existing:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="login has already been taken.",
-            )
-        return True
+        await self.ensure_unique_verifications(existing, field_name=login)
 
     async def verify_credentials(self, credentials) -> T:
         instance = await self.repo.get_instance_by_("login", credentials.login)

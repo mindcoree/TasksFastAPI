@@ -16,13 +16,13 @@ class BaseRepository(Generic[T]):
         result: Result = await self.session.execute(stmt)
         return result.scalars().one_or_none()
 
-    async def create(self, **kwargs) -> T:
+    async def create(self, kwargs: dict) -> T:
         instance = self.model(**kwargs)
         self.session.add(instance)
         await self.session.commit()
         return instance
 
-    async def update(self, id_: int, **kwargs) -> T | None:
+    async def update(self, id_: int, kwargs: dict) -> T | None:
         stmt = (
             update(self.model)
             .where(self.model.id == id_)
@@ -34,12 +34,13 @@ class BaseRepository(Generic[T]):
         updated = result.scalar_one_or_none()
         return updated
 
-    async def delete(self, id_: int) -> None:
-        stmt = delete(self.model).where(self.model.id == id_)
+    async def delete_by_(self, column_name: str, value: str) -> None:
+        column = getattr(self.model, column_name)
+        stmt = delete(self.model).where(column == value)
         await self.session.execute(stmt)
         await self.session.commit()
 
-    async def filter_by(self, **kwargs) -> Sequence[T]:
+    async def filter_by(self, kwargs: dict) -> Sequence[T]:
         stmt = select(self.model).filter_by(**kwargs)
         result: Result = await self.session.execute(stmt)
         return result.scalars().all()
