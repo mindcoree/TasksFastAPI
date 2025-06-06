@@ -3,13 +3,14 @@ from type.annotated import password, login
 
 
 class AdminBase(BaseModel):
-    id: int
     login: login
 
 
 class AdminCreate(AdminBase):
     password: password
+    login: login
+    email: str
 
 
 class AdminInfo(AdminBase):
-    pass
+    id: int

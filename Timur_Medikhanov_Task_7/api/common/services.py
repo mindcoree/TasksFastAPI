@@ -5,6 +5,7 @@ from utils import auth
 from .repository import BaseRepository, T, BaseAuthRepository
 from fastapi import HTTPException, status, Response, Request
 from .enums import Role
+from utils.auth import AccessTokenPayload
 
 
 class BaseService(Generic[T]):
@@ -32,7 +33,7 @@ class BaseService(Generic[T]):
 
     async def update_by_id(self, id_instance, data) -> T:
         await self.ensure_instance_exists_by_id(id_instance=id_instance)
-        instance = await self.repo.update(id_=id_instance, **data)
+        instance = await self.repo.update_(id_=id_instance, kwargs=data)
         return instance
 
     async def delete_by_id(self, id_delete):
@@ -47,8 +48,10 @@ class BaseAuthService(Generic[T]):
     async def create_auth(self, auth_in, role: Role) -> T:
         hash_password = await auth.hash_password(auth_in.password)
         data = auth_in.model_dump(exclude={"password"})
-        data.update({"hash_password": hash_password, "role": role})
-        return await self.repo.create(**data)
+        data.update(
+            {"hash_password": hash_password, "role": role},
+        )
+        return await self.repo.create(data)
 
     @staticmethod
     async def ensure_unique_verifications(instance: T, field_name: str):
@@ -80,11 +83,12 @@ class BaseAuthService(Generic[T]):
 
         return instance
 
-    async def refresh_access_token_and_get_user(
+    async def refresh_access_token_and_get_auth(
         self,
         response: Response,
         refresh_token: str,
     ) -> T:
+
         try:
             refresh_payload = await auth.decode_jwt(token=refresh_token)
         except InvalidTokenError:
@@ -97,7 +101,8 @@ class BaseAuthService(Generic[T]):
         instance = await self.repo.get_by_id(id_=instance_id)
         if not instance:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="instance not found"
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"{T} not found by {instance_id}",
             )
 
         access_token = await auth.create_access_token(user_info=instance)
@@ -110,10 +115,12 @@ class BaseAuthService(Generic[T]):
 
         return instance
 
-    async def access_token_payload(self, request: Request, response: Response) -> dict:
+    async def access_token_payload(
+        self, request: Request, response: Response
+    ) -> AccessTokenPayload:
         payload = getattr(request.state, "user_payload", None)
         if payload:
-            return payload
+            return AccessTokenPayload(**payload)
 
         refresh_token = request.cookies.get("refresh_token")
         if not refresh_token:
@@ -122,8 +129,8 @@ class BaseAuthService(Generic[T]):
                 detail="Refresh-token is not provided",
             )
 
-        instance = await self.refresh_access_token_and_get_user(
+        instance = await self.refresh_access_token_and_get_auth(
             response=response, refresh_token=refresh_token
         )
         payload = auth.create_payload(user_payload=instance)
-        return payload
+        return AccessTokenPayload(**payload)
