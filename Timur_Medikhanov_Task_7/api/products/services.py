@@ -12,7 +12,9 @@ class ProductService(BaseService[Product]):
         super().__init__(repository=repository)
 
     async def create_product(self, product_in: ProductIn) -> Product:
-        existing = self.repo.get_instance_by_(column_name="name", value=product_in.name)
+        existing = await self.repo.get_instance_by_(
+            column_name="name", value=product_in.name
+        )
         await self.ensure_unique(existing, product_in.name)
         if product_in.price < 0:
             raise HTTPException(
@@ -20,7 +22,7 @@ class ProductService(BaseService[Product]):
                 detail="price must be positive",
             )
 
-        return await self.repo.create(**product_in.model_dump())
+        return await self.repo.create(product_in.model_dump())
 
     async def get_product_by_id(self, id_product: int) -> Product:
         return await self.get_by_id(id_instance=id_product)
