@@ -3,10 +3,18 @@ import bcrypt
 import jwt
 from datetime import datetime, timezone, timedelta
 from functools import lru_cache
+from pydantic import BaseModel
+from api.common.enums import Role
 from core.config import settings
 from api.members.users.schemas import UserInfo
 from type.jwt import TOKEN_TYPE_FIELD, ACCESS_TOKEN_TYPE, REFRESH_TOKEN_TYPE
 from fastapi import Response
+
+
+class AccessTokenPayload(BaseModel):
+    sub: str
+    login: str
+    role: Role
 
 
 @lru_cache(maxsize=1)
