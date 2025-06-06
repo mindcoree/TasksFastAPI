@@ -1,13 +1,13 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from .models import Admin
 from api.common.repository import BaseAuthRepository, BaseRepository
+from api.members.models import Members
 
 
-class AdminAuthRepository(BaseAuthRepository[Admin]):
+class AdminAuthRepository(BaseAuthRepository[Members]):
     def __init__(self, session: AsyncSession):
-        super().__init__(session, Admin)
+        super().__init__(session, Members)
 
 
-class AdminRepository(BaseRepository[Admin]):
+class AdminRepository(BaseRepository[Members]):
     def __init__(self, session: AsyncSession):
-        super().__init__(session, Admin)
+        super().__init__(session, Members)

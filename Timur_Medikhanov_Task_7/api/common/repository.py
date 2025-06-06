@@ -22,7 +22,7 @@ class BaseRepository(Generic[T]):
         await self.session.commit()
         return instance
 
-    async def update(self, id_: int, kwargs: dict) -> T | None:
+    async def update_(self, id_: int, kwargs: dict) -> T | None:
         stmt = (
             update(self.model)
             .where(self.model.id == id_)
