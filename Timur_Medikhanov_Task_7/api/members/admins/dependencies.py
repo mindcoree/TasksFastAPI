@@ -4,6 +4,7 @@ from core.db_helper import SessionDep
 from .repository import AdminAuthRepository
 from .services import AdminAuthService
 from api.common.dependencies import get_service, make_access_token_dependency
+from utils.auth import AccessTokenPayload
 
 
 async def get_admin_auth_service(session: SessionDep) -> AdminAuthService:
@@ -29,15 +30,17 @@ AdminAuthServiceDep = Annotated[AdminAuthService, Depends(get_admin_auth_service
 # 4) Функция-зависимость для AdminAccessTokenPayload
 
 _get_admin_access_token_payload = make_access_token_dependency(get_admin_auth_service)
-AccessTokenPayloadAdmin = Annotated[dict, Depends(_get_admin_access_token_payload)]
+AccessTokenPayloadAdmin = Annotated[
+    AccessTokenPayload, Depends(_get_admin_access_token_payload)
+]
 
 
 async def restrict_to_admin(payload: AccessTokenPayloadAdmin) -> dict:
-    if payload.get("role") != "admin":
+    if payload.role != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail="Admin access required"
         )
     return payload
 
 
-AdminRestricted = Annotated[dict, Depends(restrict_to_admin)]
+AdminRestricted = Annotated[AccessTokenPayload, Depends(restrict_to_admin)]
