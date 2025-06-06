@@ -1,17 +1,18 @@
-from fastapi import APIRouter, status, Response
+from fastapi import APIRouter, status
 from core.config import settings
 from .dependencies import ProductServiceDep
-from .schemas import ProductOut, ProductIn, ProductUpdate
+from .schemas import ProductOut, ProductIn
 from type.annotated import form_model
 from api.members.admins.dependencies import AdminRestricted
+
 
 router = APIRouter(prefix=settings.api.products.prefix, tags=["products REST"])
 
 
 @router.get("/product/{product_id}", response_model=ProductOut)
 async def get_product(
-    service: ProductServiceDep,
     product_id: int,
+    service: ProductServiceDep,
     restricted: AdminRestricted,
 ) -> ProductOut:
     return await service.get_product_by_id(product_id)
@@ -23,15 +24,10 @@ async def get_product(
     status_code=status.HTTP_201_CREATED,
 )
 async def create_product(
-    response: Response,
-    service: ProductServiceDep,
     product: form_model(ProductIn),
+    service: ProductServiceDep,
     restricted: AdminRestricted,
 ) -> ProductOut:
-
-    response.headers["X-Admin-Created"] = (
-        f"{restricted.get("login")} изменил продукт #ID:{product.id}"
-    )
 
     return await service.create_product(product_in=product)
 
@@ -46,9 +42,7 @@ async def update_product(
     service: ProductServiceDep,
     restricted: AdminRestricted,
 ) -> ProductOut:
-    return await service.update_product_by_id(
-        product_in=ProductUpdate(id=product_id, **product.model_dump())
-    )
+    return await service.update_product_by_id(product_id, product_in=product)
 
 
 @router.delete(

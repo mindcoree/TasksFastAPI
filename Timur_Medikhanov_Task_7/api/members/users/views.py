@@ -48,7 +48,7 @@ async def user_register(
     registration: Annotated[UserCreate, Form()],
 ) -> UserInfo:
     validation.validate_create(data=registration)
-    return await auth_user_service.create_user(user=registration)
+    return await auth_user_service.create_user(user_in=registration)
 
 
 @router.get("/info_user", response_model=UserInfo)
