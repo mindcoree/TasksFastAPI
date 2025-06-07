@@ -28,7 +28,13 @@ class ProductService(BaseService[Product]):
         return await self.get_by_id(id_instance=id_product)
 
     async def get_list_products(self) -> list[Product]:
-        return await self.repo.get_list_products()
+        list_products = await self.repo.get_list_products()
+        if not list_products:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="There are no products",
+            )
+        return list_products
 
     async def update_product_by_id(
         self, product_id: int, product_in: ProductUpdate, partial: bool = False
