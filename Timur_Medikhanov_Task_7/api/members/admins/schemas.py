@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from type.annotated import password, login
+from api.common.enums import Role
 
 
 class AdminBase(BaseModel):
@@ -14,3 +15,4 @@ class AdminCreate(AdminBase):
 
 class AdminInfo(AdminBase):
     id: int
+    role: Role

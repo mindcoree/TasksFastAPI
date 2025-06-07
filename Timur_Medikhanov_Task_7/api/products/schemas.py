@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -5,7 +7,7 @@ from datetime import datetime
 class ProductIn(BaseModel):
     name: str
     description: str | None = None
-    price: int
+    price: Decimal
 
 
 class ProductOut(ProductIn):
