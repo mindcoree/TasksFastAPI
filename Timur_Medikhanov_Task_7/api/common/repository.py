@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from .base import Base
-from typing import Generic, TypeVar, Sequence
+from typing import Generic, TypeVar, Sequence, Any
 from sqlalchemy import select, Result, update, delete
 
 T = TypeVar("T", bound=Base)
@@ -22,7 +22,7 @@ class BaseRepository(Generic[T]):
         await self.session.commit()
         return instance
 
-    async def update_(self, id_: int, kwargs: dict) -> T | None:
+    async def update_by_id(self, id_: int, kwargs: dict) -> T | None:
         stmt = (
             update(self.model)
             .where(self.model.id == id_)
@@ -34,7 +34,7 @@ class BaseRepository(Generic[T]):
         updated = result.scalar_one_or_none()
         return updated
 
-    async def delete_by_(self, column_name: str, value: str) -> None:
+    async def delete_by_(self, column_name: str, value: Any) -> None:
         column = getattr(self.model, column_name)
         stmt = delete(self.model).where(column == value)
         await self.session.execute(stmt)
@@ -50,7 +50,7 @@ class BaseRepository(Generic[T]):
         result: Result = await self.session.execute(stmt)
         return result.scalars().all()
 
-    async def get_instance_by_(self, column_name: str, value: str) -> T | None:
+    async def get_instance_by_(self, column_name: str, value: Any) -> T | None:
         column = getattr(self.model, column_name)
         stmt = select(self.model).where(column == value)
         result: Result = await self.session.execute(stmt)
