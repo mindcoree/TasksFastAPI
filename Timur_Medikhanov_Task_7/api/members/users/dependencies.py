@@ -1,7 +1,7 @@
 from fastapi import Depends, HTTPException, status
 
 from utils.auth import AccessTokenPayload
-from api.members.models import Members
+from api.members.models import Member
 from .repository import UserAuthRepository
 from .services import UserAuthService
 from api.common.dependencies import get_service, make_access_token_dependency
@@ -23,12 +23,12 @@ UserAuthServiceDep = Annotated[UserAuthService, Depends(get_user_auth_service)]
 
 async def get_user_auth_validator(
     service: UserAuthServiceDep,
-) -> AuthValidator[Members]:
+) -> AuthValidator[Member]:
     return AuthValidator(service=service)
 
 
 UserAuthValidatorDep = Annotated[
-    AuthValidator[Members], Depends(get_user_auth_validator)
+    AuthValidator[Member], Depends(get_user_auth_validator)
 ]
 
 
