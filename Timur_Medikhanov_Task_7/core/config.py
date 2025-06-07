@@ -23,6 +23,10 @@ class ProductPrefix(BaseModel):
     prefix: str = "/products"
 
 
+class OrdersPrefix(BaseModel):
+    prefix: str = "/orders"
+
+
 class MembersPrefix(BaseModel):
     prefix: str = "/members"
     users: UserPrefix = UserPrefix()
@@ -33,6 +37,7 @@ class ApiPrefix(BaseModel):
     prefix: str = "/api"
     members: MembersPrefix = MembersPrefix()
     products: ProductPrefix = ProductPrefix()
+    orders: OrdersPrefix = OrdersPrefix()
 
 
 class DatabaseConfig(BaseModel):
