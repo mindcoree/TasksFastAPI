@@ -9,8 +9,9 @@ from utils.auth import AccessTokenPayload
 
 
 class BaseService(Generic[T]):
-    def __init__(self, repository: BaseRepository[T]):
+    def __init__(self, repository: BaseRepository[T], model: type[T]):
         self.repo: BaseRepository[T] = repository
+        self.model = model
 
     @staticmethod
     async def ensure_unique(instance: T, field_name: str) -> None:
@@ -23,27 +24,20 @@ class BaseService(Generic[T]):
     async def get_by_id(self, id_instance: int) -> T:
         return await self.repo.get_by_id(id_instance)
 
-    async def ensure_instance_exists_by_id(self, id_instance) -> None:
+    async def ensure_instance_exists_by_id(self, id_instance) -> T:
         instance = await self.get_by_id(id_instance)
         if not instance:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"{T} is not found by id: {id_instance} !",
+                detail=f"{self.model.__name__} is not found by id: {id_instance} !",
             )
-
-    async def update_by_id(self, id_instance, data) -> T:
-        await self.ensure_instance_exists_by_id(id_instance=id_instance)
-        instance = await self.repo.update_(id_=id_instance, kwargs=data)
         return instance
-
-    async def delete_by_id(self, id_delete):
-        await self.ensure_instance_exists_by_id(id_delete)
-        return await self.repo.delete_by_("id", value=id_delete)
 
 
 class BaseAuthService(Generic[T]):
-    def __init__(self, repository: BaseAuthRepository[T]):
+    def __init__(self, repository: BaseAuthRepository[T], model: type[T]):
         self.repo: BaseAuthRepository[T] = repository
+        self.model = model
 
     async def create_auth(self, auth_in, role: Role) -> T:
         hash_password = await auth.hash_password(auth_in.password)
@@ -102,7 +96,7 @@ class BaseAuthService(Generic[T]):
         if not instance:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"{T} not found by {instance_id}",
+                detail=f"{self.model.__name__} not found by {instance_id}",
             )
 
         access_token = await auth.create_access_token(user_info=instance)
@@ -126,7 +120,7 @@ class BaseAuthService(Generic[T]):
         if not refresh_token:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Refresh-token is not provided",
+                detail="Token is not provided",
             )
 
         instance = await self.refresh_access_token_and_get_auth(
