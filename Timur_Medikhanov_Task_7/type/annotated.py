@@ -18,7 +18,6 @@ created_at = Annotated[
     mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
-        default=func.now(),
         nullable=False,
     ),
 ]
@@ -27,8 +26,8 @@ updated_at = Annotated[
     datetime,
     mapped_column(
         DateTime(timezone=True),
-        onupdate=func.now(),
         server_default=func.now(),
+        onupdate=func.now(),
         nullable=False,
     ),
 ]
