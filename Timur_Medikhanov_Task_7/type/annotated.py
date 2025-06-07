@@ -6,6 +6,11 @@ from pydantic import Field, StringConstraints, BaseModel
 from fastapi import Form
 
 
+def form_model_list(schema: Type[BaseModel]) -> Annotated[BaseModel, Form()]:
+    """Wraps a Pydantic model with Form list dependency for FastAPI."""
+    return Annotated[schema, Form()]
+
+
 def form_model(schema: Type[BaseModel]) -> Annotated[BaseModel, Form()]:
     """Wraps a Pydantic model with Form dependency for FastAPI."""
     return Annotated[schema, Form()]

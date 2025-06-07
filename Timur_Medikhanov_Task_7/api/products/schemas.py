@@ -1,5 +1,5 @@
 from decimal import Decimal
-
+from typing import Optional
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -8,6 +8,7 @@ class ProductIn(BaseModel):
     name: str
     description: str | None = None
     price: Decimal
+    stock: Optional[int] = 0
 
 
 class ProductOut(ProductIn):
@@ -18,3 +19,10 @@ class ProductOut(ProductIn):
 
 class ProductUpdate(ProductIn):
     pass
+
+
+class ProductUpdatePartial(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    price: Optional[Decimal] = None
+    stock: Optional[int] = None

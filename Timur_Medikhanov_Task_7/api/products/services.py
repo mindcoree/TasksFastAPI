@@ -27,14 +27,14 @@ class ProductService(BaseService[Product]):
     async def get_product_by_id(self, id_product: int) -> Product:
         return await self.get_by_id(id_instance=id_product)
 
-    async def list_product(self) -> list[Product]:
-        return await self.repo.get_list_product()
+    async def get_list_products(self) -> list[Product]:
+        return await self.repo.get_list_products()
 
     async def update_product_by_id(
-        self, product_id: int, product_in: ProductUpdate
+        self, product_id: int, product_in: ProductUpdate, partial: bool = False
     ) -> Product:
         return await self.repo.update_by_id(
-            id_=product_id, kwargs=product_in.model_dump()
+            id_=product_id, kwargs=product_in.model_dump(exclude_unset=partial)
         )
 
     async def delete_product_by_id(self, delete_id: int) -> None:

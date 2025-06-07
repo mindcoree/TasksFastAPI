@@ -8,7 +8,7 @@ class ProductRepository(BaseRepository[Product]):
     def __init__(self, session: AsyncSession):
         super().__init__(session=session, model=Product)
 
-    async def get_list_product(self):
+    async def get_list_products(self):
         stmt = select(Product).order_by(Product.id)
         result: Result = await self.session.execute(stmt)
         return result.scalars().all()
