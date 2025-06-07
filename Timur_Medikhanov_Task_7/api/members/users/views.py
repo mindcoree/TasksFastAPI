@@ -47,7 +47,7 @@ async def user_register(
     validation: UserAuthValidatorDep,
     registration: Annotated[UserCreate, Form()],
 ) -> UserInfo:
-    validation.validate_create(data=registration)
+    await validation.validate_create(data=registration)
     return await auth_user_service.create_user(user_in=registration)
 
 
