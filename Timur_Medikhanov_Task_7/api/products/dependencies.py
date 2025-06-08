@@ -1,10 +1,12 @@
-from core.db_helper import SessionDep
+from typing import Annotated
+
+from fastapi import Depends
+
 from api.common.dependencies import get_service
+from core.db_helper import SessionDep
+from .repository import ProductRepository
 from .schemas import ProductOut
 from .services import ProductService
-from .repository import ProductRepository
-from typing import Annotated
-from fastapi import Depends
 
 
 async def get_product_service(session: SessionDep) -> ProductService:

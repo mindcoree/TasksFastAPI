@@ -1,10 +1,12 @@
-from fastapi import Depends, HTTPException, status
 from typing import Annotated
+
+from fastapi import Depends, HTTPException, status
+
+from api.common.dependencies import get_service, make_access_token_dependency
 from core.db_helper import SessionDep
+from utils.auth import AccessTokenPayload
 from .repository import AdminAuthRepository
 from .services import AdminAuthService
-from api.common.dependencies import get_service, make_access_token_dependency
-from utils.auth import AccessTokenPayload
 
 
 async def get_admin_auth_service(session: SessionDep) -> AdminAuthService:

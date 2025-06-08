@@ -1,9 +1,9 @@
-from pydantic import BaseModel, EmailStr, Field
 from typing import Annotated
 
+from pydantic import BaseModel, EmailStr, Field
 
-from type.annotated import password, login
 from api.common.enums import Role
+from type.annotated import password, login
 
 
 class UserLogin(BaseModel):

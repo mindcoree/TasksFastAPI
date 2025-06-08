@@ -1,6 +1,7 @@
 from pydantic import BaseModel
-from type.annotated import password, login
+
 from api.common.enums import Role
+from type.annotated import password, login
 
 
 class AdminBase(BaseModel):

@@ -1,12 +1,12 @@
 from typing import Annotated
 
 from fastapi import APIRouter, status, Form
+
+from api.members.admins.dependencies import AdminRestricted
 from core.config import settings
 from type.annotated import form_model
-from api.members.admins.dependencies import AdminRestricted
-from .schemas import ProductOut, ProductIn, ProductUpdatePartial, ProductUpdate
 from .dependencies import ProductServiceDep, ExistingProduct
-
+from .schemas import ProductOut, ProductIn, ProductUpdatePartial, ProductUpdate
 
 router = APIRouter(prefix=settings.api.products.prefix, tags=["products REST"])
 

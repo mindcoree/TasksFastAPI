@@ -1,6 +1,7 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import Depends, Request, Response
 from typing import Callable, TypeVar, Type
+
+from fastapi import Depends, Request, Response
+from sqlalchemy.ext.asyncio import AsyncSession
 
 TRepo = TypeVar("TRepo")
 TService = TypeVar("TService")

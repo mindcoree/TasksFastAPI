@@ -1,5 +1,6 @@
+from sqlalchemy import select, Result
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, Result, delete
+
 from api.common.repository import BaseRepository
 from .models import Product
 

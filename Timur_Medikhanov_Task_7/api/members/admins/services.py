@@ -1,8 +1,8 @@
+from api.common.enums import Role
 from api.common.services import BaseAuthService
 from api.members.models import Member
 from .repository import AdminAuthRepository
 from .schemas import AdminCreate
-from api.common.enums import Role
 
 
 class AdminAuthService(BaseAuthService[Member]):

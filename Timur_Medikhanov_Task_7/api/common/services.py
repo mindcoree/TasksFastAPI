@@ -1,11 +1,13 @@
 from typing import Generic
+
+from fastapi import HTTPException, status, Response, Request
 from jwt import InvalidTokenError
+
 from core.config import settings
 from utils import auth
-from .repository import BaseRepository, T, BaseAuthRepository
-from fastapi import HTTPException, status, Response, Request
-from .enums import Role
 from utils.auth import AccessTokenPayload
+from .enums import Role
+from .repository import BaseRepository, T, BaseAuthRepository
 
 
 class BaseService(Generic[T]):
@@ -112,7 +114,7 @@ class BaseAuthService(Generic[T]):
     async def access_token_payload(
         self, request: Request, response: Response
     ) -> AccessTokenPayload:
-        payload = getattr(request.state, "user_payload", None)
+        payload = getattr(request.state, "member_payload", None)
         if payload:
             return AccessTokenPayload(**payload)
 
@@ -126,5 +128,5 @@ class BaseAuthService(Generic[T]):
         instance = await self.refresh_access_token_and_get_auth(
             response=response, refresh_token=refresh_token
         )
-        payload = auth.create_payload(user_payload=instance)
+        payload = auth.create_payload(member_payload=instance)
         return AccessTokenPayload(**payload)

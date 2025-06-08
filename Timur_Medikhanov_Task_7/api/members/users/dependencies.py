@@ -1,12 +1,13 @@
+from typing import Annotated
+
 from fastapi import Depends, HTTPException, status
 
-from utils.auth import AccessTokenPayload
+from api.common.dependencies import get_service, make_access_token_dependency
 from api.members.models import Member
+from core.db_helper import SessionDep
+from utils.auth import AccessTokenPayload
 from .repository import UserAuthRepository
 from .services import UserAuthService
-from api.common.dependencies import get_service, make_access_token_dependency
-from typing import Annotated
-from core.db_helper import SessionDep
 from ..validations import AuthValidator
 
 

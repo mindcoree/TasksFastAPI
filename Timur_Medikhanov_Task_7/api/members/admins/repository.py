@@ -1,4 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from api.common.repository import BaseAuthRepository, BaseRepository
 from api.members.models import Member
 

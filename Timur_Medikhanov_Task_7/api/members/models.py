@@ -8,6 +8,7 @@ from type.annotated import ID_PK
 
 if TYPE_CHECKING:
     from api.orders.models import Order
+    from api.bank.models import BankAccount
 
 
 class Member(BaseAccountMixin, Base):
@@ -16,3 +17,4 @@ class Member(BaseAccountMixin, Base):
     id: Mapped[ID_PK]
     email: Mapped[str] = mapped_column(nullable=False, unique=True)
     orders: Mapped[list["Order"]] = relationship(back_populates="member")
+    bank_accounts: Mapped[list["BankAccount"]] = relationship(back_populates="member")

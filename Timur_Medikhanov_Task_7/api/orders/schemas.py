@@ -1,11 +1,11 @@
+from datetime import datetime
 from decimal import Decimal
 from typing import List, Optional
 
 from pydantic import BaseModel
 
-from ..common.order_product_association import OrderProductAssociation
 from ..common.enums import OrderStatus, PaymentStatus
-from datetime import datetime
+from ..common.order_product_association import OrderProductAssociation
 
 
 class OrderCreate(BaseModel):

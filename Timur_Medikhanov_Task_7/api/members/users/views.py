@@ -1,14 +1,16 @@
 from typing import Annotated
 
 from fastapi import APIRouter, status, Response, Form
+
 from core.config import settings
-from .schemas import TokenInfo, UserCreate, UserInfo, UserCredentials
+from utils import auth
+from utils.auth import AccessTokenPayload
 from .dependencies import (
     UserAuthServiceDep,
     UserRestricted,
     UserAuthValidatorDep,
 )
-from utils import auth
+from .schemas import TokenInfo, UserCreate, UserInfo, UserCredentials
 
 router = APIRouter(prefix=settings.api.members.users.prefix, tags=["Users"])
 
@@ -52,6 +54,7 @@ async def user_register(
 
 
 @router.get("/info_user", response_model=UserInfo)
-async def info_user(auth_service: UserAuthServiceDep, current_user: UserRestricted):
-    user_id = int(current_user.get("sub"))
-    return await auth_service.get_by_id(user_id)
+async def info_user(
+    auth_service: UserAuthServiceDep, current_user: UserRestricted
+) -> AccessTokenPayload:
+    return current_user

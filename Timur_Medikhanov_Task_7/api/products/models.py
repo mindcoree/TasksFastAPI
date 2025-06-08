@@ -1,8 +1,9 @@
 from decimal import Decimal
-
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import CheckConstraint, DECIMAL
 from typing import TYPE_CHECKING
+
+from sqlalchemy import CheckConstraint, DECIMAL
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from api.common.base import Base
 from api.common.mixins import TimestampMix
 from type.annotated import ID_PK

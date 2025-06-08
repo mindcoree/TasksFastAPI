@@ -1,9 +1,10 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Form
+
 from core.config import settings
 from .dependencies import AdminAuthServiceDep
 from .schemas import AdminCreate, AdminInfo
-from typing import Annotated
-
 
 router = APIRouter(prefix=settings.api.members.admin.prefix, tags=["ADMIN"])
 
