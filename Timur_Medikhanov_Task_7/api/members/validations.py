@@ -1,9 +1,10 @@
-from type.jwt import TOKEN_TYPE_FIELD
+from typing import TypeVar, Generic
 
 from fastapi import HTTPException, status
 from pydantic import BaseModel
-from typing import TypeVar, Generic
+
 from api.common.services import BaseAuthService
+from type.jwt import TOKEN_TYPE_FIELD
 
 T = TypeVar("T", bound=BaseModel)
 
