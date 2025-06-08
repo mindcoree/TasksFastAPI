@@ -1,8 +1,10 @@
 from decimal import Decimal
 from typing import TYPE_CHECKING
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from api.common.base import Base
+
 from sqlalchemy import ForeignKey, PrimaryKeyConstraint, CheckConstraint, DECIMAL
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from api.common.base import Base
 
 if TYPE_CHECKING:
     from api.orders.models import Order
