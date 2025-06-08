@@ -18,3 +18,24 @@ class PaymentStatus(str, Enum):
     PENDING = "pending"
     PAID = "paid"
     FAILED = "failed"
+
+
+# Банки
+class BankName(str, Enum):
+    SBERBANK = "sberbank"
+    TINKOFF = "tinkoff"
+    ALFABANK = "alfabank"
+    HOMECREDIT = "homecredit"
+
+
+# Платёжные системы
+class PaymentSystem(str, Enum):
+    VISA = "visa"
+    MASTERCARD = "mastercard"
+    MIR = "mir"
+
+
+class AccountStatus(str, Enum):
+    ACTIVE = "ACTIVE"
+    BLOCKED = "BLOCKED"
+    EXPIRED = "EXPIRED"
