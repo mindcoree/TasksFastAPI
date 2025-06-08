@@ -1,14 +1,9 @@
 from datetime import datetime
 from typing import Annotated, Type
 from sqlalchemy.orm import mapped_column
-from sqlalchemy import DateTime, func
+from sqlalchemy import DateTime, func, JSON
 from pydantic import Field, StringConstraints, BaseModel
 from fastapi import Form
-
-
-def form_model_list(schema: Type[BaseModel]) -> Annotated[BaseModel, Form()]:
-    """Wraps a Pydantic model with Form list dependency for FastAPI."""
-    return Annotated[schema, Form()]
 
 
 def form_model(schema: Type[BaseModel]) -> Annotated[BaseModel, Form()]:
@@ -17,6 +12,8 @@ def form_model(schema: Type[BaseModel]) -> Annotated[BaseModel, Form()]:
 
 
 ID_PK = Annotated[int, mapped_column(primary_key=True)]
+JSON = Annotated[dict, mapped_column(JSON)]
+
 
 created_at = Annotated[
     datetime,
