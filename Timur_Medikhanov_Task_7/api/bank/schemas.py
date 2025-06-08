@@ -1,13 +1,15 @@
 from datetime import datetime
+from decimal import Decimal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from ..common.enums import BankName, PaymentSystem, AccountStatus
 
 
 class BaseAccount(BaseModel):
     bank_name: BankName
     payment_system: PaymentSystem
-    is_default: bool
+    balance: Decimal
+    is_default: bool = Field(description="Указатель основной карты")
 
 
 class AccountIn(BaseAccount):

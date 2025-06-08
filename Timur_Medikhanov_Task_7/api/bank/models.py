@@ -1,6 +1,7 @@
+from decimal import Decimal
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Enum
+from sqlalchemy import Enum, DECIMAL
 from sqlalchemy.orm import Mapped, mapped_column
 
 from api.common.base import Base
@@ -17,6 +18,7 @@ class BankAccount(MemberRelationMix, TimestampMix, Base):
     __member_back_populates = "bank_accounts"
     id: Mapped[ID_PK]
     bank_name: Mapped[BankName] = mapped_column(Enum(BankName, name="bank_name"))
+    balance: Mapped[Decimal] = mapped_column(DECIMAL(precision=10, scale=2))
     encrypted_account_number: Mapped[str] = mapped_column(
         nullable=False, comment="Зашифрованный номер карты"
     )
