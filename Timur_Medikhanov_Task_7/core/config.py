@@ -6,9 +6,18 @@ from pathlib import Path
 BASE_DIR = Path(__file__).parent.parent
 
 
+class CeleryConfig(BaseModel):
+    broker_url: str
+    result_backend: str
+
+
 class RunConfig(BaseModel):
     port: int = 8000
     host: str = "127.0.0.1"
+
+
+class BankAccountPrefix(BaseModel):
+    prefix: str = "/back-account"
 
 
 class UserPrefix(BaseModel):
@@ -38,6 +47,7 @@ class ApiPrefix(BaseModel):
     members: MembersPrefix = MembersPrefix()
     products: ProductPrefix = ProductPrefix()
     orders: OrdersPrefix = OrdersPrefix()
+    bk: BankAccountPrefix = BankAccountPrefix()
 
 
 class DatabaseConfig(BaseModel):
@@ -73,7 +83,9 @@ class Settings(BaseSettings):
     run: RunConfig = RunConfig()
     api: ApiPrefix = ApiPrefix()
     db: DatabaseConfig
+    celery: CeleryConfig
     auth: AuthJWT = AuthJWT()
+    fernet_key: str
 
 
 settings = Settings()

@@ -101,7 +101,7 @@ async def create_jwt(
 
 
 async def create_access_token(user_info: UserInfo) -> str:
-    payload = create_payload(user_payload=user_info)
+    payload = create_payload(member_payload=user_info)
     return await create_jwt(
         token_data=payload,
         token_type=ACCESS_TOKEN_TYPE,
@@ -118,11 +118,11 @@ async def create_refresh_token(user_info: UserInfo) -> str:
     )
 
 
-def create_payload(user_payload: UserInfo) -> dict:
+def create_payload(member_payload: UserInfo) -> dict:
     return {
-        "sub": str(user_payload.id),
-        "login": user_payload.login,
-        "role": user_payload.role,
+        "sub": str(member_payload.id),
+        "login": member_payload.login,
+        "role": member_payload.role,
     }
 
 

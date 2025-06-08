@@ -1,3 +1,4 @@
+from asyncio import current_task
 from typing import AsyncGenerator, Annotated
 
 from fastapi import Depends
@@ -6,6 +7,7 @@ from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     create_async_engine,
     async_sessionmaker,
+    async_scoped_session,
 )
 from .config import settings
 
@@ -49,3 +51,16 @@ db_helper = DataBaseHelper(
 
 
 SessionDep = Annotated[AsyncSession, Depends(db_helper.session_getter)]
+
+
+def get_scoped_session():
+    session = async_scoped_session(
+        session_factory=db_helper.session_factory, scopefunc=current_task
+    )
+    return session
+
+
+async def scoped_session_dependency() -> AsyncSession:
+    session = get_scoped_session()
+    yield session
+    await session.remove()
