@@ -1,4 +1,6 @@
-from sqlalchemy import select, Result, and_, update
+from typing import Any, Sequence
+
+from sqlalchemy import select, Result, update, Row, RowMapping
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
@@ -10,7 +12,7 @@ class BankAccountRepository(BaseRepository[BankAccount]):
     def __init__(self, session: AsyncSession):
         super().__init__(session=session, model=BankAccount)
 
-    async def card_exists_by_hash(self, account_id: int, hash_value: str) -> list[str]:
+    async def card_exists_by_hash(self, account_id: int, hash_value: str) -> Sequence[Row[Any] | RowMapping | Any]:
         stmt = select(BankAccount.hash_account_number).where(
             BankAccount.hash_account_number == hash_value,
             BankAccount.member_id == account_id,
