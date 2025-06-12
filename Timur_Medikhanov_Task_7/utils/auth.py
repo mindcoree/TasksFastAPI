@@ -85,9 +85,9 @@ async def verify_password(password: str, hashed_password: str) -> bool:
 
 
 async def create_jwt(
-    token_data: str,
+    token_data: dict,
     token_type: str,
-    expire_minutes: str = settings.auth.access_expire_min,
+    expire_minutes: int = settings.auth.access_expire_min,
     expire_timedelta: timedelta | None = None,
 ) -> str:
 
@@ -133,7 +133,7 @@ async def set_token_cookie(
     max_age: int,
     httponly: bool = True,  # Защита от доступа через JavaScript
     secure: bool = True,  # Только для HTTPS
-    samesite: str = "lax",  # Защита от CSRF
+    samesite:str = "lax",  # Защита от CSRF
 ) -> None:
     response.set_cookie(
         key=key,
