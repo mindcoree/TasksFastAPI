@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from sqlalchemy import Enum, DECIMAL
 from sqlalchemy.orm import Mapped, mapped_column
 
-from api.common.base import Base
+from core.base import Base
 from api.common.enums import BankName, PaymentSystem, AccountStatus
 from api.common.mixins import TimestampMix, MemberRelationMix
 from type.annotated import ID_PK
@@ -23,7 +23,7 @@ class BankAccount(MemberRelationMix, TimestampMix, Base):
         nullable=False, comment="Зашифрованный номер карты"
     )
     hash_account_number: Mapped[str] = mapped_column(
-        nullable=False, comment="Хешированный номер карты"
+        unique=True, nullable=False, comment="Хешированный номер карты"
     )
     masked_account_number: Mapped[str] = mapped_column(
         nullable=False, comment="Маскированный номер (**** **** **** 1234)"

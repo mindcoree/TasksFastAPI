@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from sqlalchemy import ForeignKey, PrimaryKeyConstraint, CheckConstraint, DECIMAL
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from api.common.base import Base
+from core.base import Base
 
 if TYPE_CHECKING:
     from api.orders.models import Order

@@ -1,7 +1,8 @@
-from typing import Generic
+from typing import Generic, Any, Type
 
 from fastapi import HTTPException, status, Response, Request
 from jwt import InvalidTokenError
+from sqlalchemy.exc import IntegrityError
 
 from core.config import settings
 from utils import auth
@@ -14,6 +15,19 @@ class BaseService(Generic[T]):
     def __init__(self, repository: BaseRepository[T], model: type[T]):
         self.repo: BaseRepository[T] = repository
         self.model = model
+
+    async def commit_or_raise(
+        self,
+        result: Any | None,
+        http_exception: Type[Exception],
+        commit: bool = True,
+    ) -> Any:
+
+        if result is None:
+            raise http_exception
+        if commit:
+             await self.repo.session.commit()
+        return result
 
     @staticmethod
     async def ensure_unique(instance: T, field_name: str) -> None:

@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from api.common.base import Base
+from core.base import Base
 from api.common.mixins import BaseAccountMixin
 from type.annotated import ID_PK
 

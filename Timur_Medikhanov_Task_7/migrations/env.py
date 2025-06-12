@@ -7,14 +7,12 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 from core.config import settings
-from api.common.base import Base
-
-
-from api.members.models import Member
+from core.base import Base
 from api.common.order_product_association import OrderProductAssociation
-from api.orders.models import Order
 from api.products.models import Product
+from api.members.models import Member
 from api.bank.models import BankAccount
+from api.orders.models import Order
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

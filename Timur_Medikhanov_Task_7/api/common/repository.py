@@ -3,7 +3,7 @@ from typing import Generic, TypeVar, Sequence, Any
 from sqlalchemy import select, Result, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .base import Base
+from core.base import Base
 
 T = TypeVar("T", bound=Base)
 
@@ -16,7 +16,7 @@ class BaseRepository(Generic[T]):
     async def get_by_id(self, id_: int) -> T | None:
         stmt = select(self.model).where(self.model.id == id_)
         result: Result = await self.session.execute(stmt)
-        return result.scalars().one_or_none()
+        return result.scalar_one_or_none()
 
     async def create(self, kwargs: dict) -> T:
         instance = self.model(**kwargs)
@@ -32,15 +32,14 @@ class BaseRepository(Generic[T]):
             .returning(self.model)
         )
         result: Result = await self.session.execute(stmt)
-        await self.session.commit()
-        updated = result.scalar_one_or_none()
-        return updated
 
-    async def delete_by_(self, column_name: str, value: Any) -> None:
+        return result.scalar_one_or_none()
+
+    async def delete_by_(self, column_name: str, value: Any) -> int | None:
         column = getattr(self.model, column_name)
-        stmt = delete(self.model).where(column == value)
-        await self.session.execute(stmt)
-        await self.session.commit()
+        stmt = delete(self.model).where(column == value).returning(self.model.id)
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
 
     async def filter_by(self, kwargs: dict) -> Sequence[T]:
         stmt = select(self.model).filter_by(**kwargs)
@@ -56,7 +55,7 @@ class BaseRepository(Generic[T]):
         column = getattr(self.model, column_name)
         stmt = select(self.model).where(column == value)
         result: Result = await self.session.execute(stmt)
-        return result.scalars().one_or_none()
+        return result.scalar_one_or_none()
 
 
 class BaseAuthRepository(BaseRepository[T], Generic[T]):

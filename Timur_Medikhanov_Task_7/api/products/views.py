@@ -14,9 +14,10 @@ router = APIRouter(prefix=settings.api.products.prefix, tags=["products REST"])
 @router.get("/product/{product_id}", response_model=ProductOut)
 async def get_product(
     restricted: AdminRestricted,
-    product_entity: ExistingProduct,
+    product_id: int,
+    service: ProductServiceDep,
 ) -> ProductOut:
-    return product_entity
+    return await service.get_product_by_id(product_id)
 
 
 @router.get("/list-products")
@@ -34,7 +35,7 @@ async def get_list_products(
 )
 async def create_product(
     restricted: AdminRestricted,
-    product: Annotated[ProductIn, Form()],
+    product: form_model(ProductIn),
     service: ProductServiceDep,
 ) -> ProductOut:
 

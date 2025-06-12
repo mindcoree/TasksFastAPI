@@ -5,7 +5,7 @@ from sqlalchemy import CheckConstraint, DECIMAL, Enum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from type.annotated import ID_PK
-from ..common.base import Base
+from core.base import Base
 from ..common.enums import OrderStatus, PaymentStatus
 from ..common.mixins import MemberRelationMix
 from ..common.mixins import TimestampMix

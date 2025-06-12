@@ -12,6 +12,14 @@ class BaseAccount(BaseModel):
     is_default: bool = Field(description="Указатель основной карты")
 
 
+class BankAccountCreate(BaseAccount):
+    member_id: int
+    masked_account_number: str
+    encrypted_account_number: str
+    hash_account_number: str
+    account_status: AccountStatus
+
+
 class AccountIn(BaseAccount):
     account_number: str
 
