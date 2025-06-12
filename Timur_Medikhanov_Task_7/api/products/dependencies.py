@@ -18,4 +18,3 @@ async def get_product_service(session: SessionDep) -> ProductService:
 
 
 ProductServiceDep = Annotated[ProductService, Depends(get_product_service)]
-
