@@ -1,5 +1,5 @@
 from asyncio import current_task
-from typing import AsyncGenerator, Annotated
+from typing import AsyncGenerator, Annotated, Any
 
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import (
@@ -28,7 +28,6 @@ class DataBaseHelper:
             max_overflow=max_overflow,
             pool_size=pool_size,
         )
-
         self.session_factory: async_sessionmaker[AsyncSession] = async_sessionmaker(
             bind=self.engine, autoflush=False, expire_on_commit=False
         )
@@ -60,7 +59,9 @@ def get_scoped_session():
     return session
 
 
-async def scoped_session_dependency() -> AsyncSession:
+async def scoped_session_dependency() -> (
+    AsyncGenerator[async_scoped_session[AsyncSession | Any], Any]
+):
     session = get_scoped_session()
     yield session
     await session.remove()

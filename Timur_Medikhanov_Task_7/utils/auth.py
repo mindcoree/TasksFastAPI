@@ -105,7 +105,7 @@ async def create_access_token(user_info: UserInfo) -> str:
     return await create_jwt(
         token_data=payload,
         token_type=ACCESS_TOKEN_TYPE,
-        expire_minutes=settings.auth.refresh_expire_days,
+        expire_minutes=settings.auth.access_expire_min,
     )
 
 
@@ -131,15 +131,15 @@ async def set_token_cookie(
     key: str,
     value: str,
     max_age: int,
-    httponly: bool = True,  # Защита от доступа через JavaScript
-    secure: bool = True,  # Только для HTTPS
-    samesite:str = "lax",  # Защита от CSRF
+    httponly: bool = False,  # Защита от доступа через JavaScript
+    secure: bool = False,  # Только для HTTPS
+    # samesite: str = "lax",  # Защита от CSRF
 ) -> None:
     response.set_cookie(
         key=key,
         value=value,
         httponly=httponly,
-        samesite=samesite,
+        # samesite=samesite,
         secure=secure,
         max_age=max_age,
     )
