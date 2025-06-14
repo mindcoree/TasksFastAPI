@@ -3,7 +3,7 @@ from core.exceptions import AppException
 
 class ProductNotFoundId(AppException.NotFoundId):
     def __init__(self, product_id: int):
-        super().__init__(id_=product_id, model="Product")
+        super().__init__(field_name="id", value=product_id, model="Product")
 
 
 class ProductAlreadyExists(AppException.AlreadyExists):

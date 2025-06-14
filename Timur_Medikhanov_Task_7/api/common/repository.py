@@ -14,7 +14,7 @@ class BaseRepository(Generic[T]):
         self.model: type[T] = model
 
     async def get_by_id(self, id_: int) -> T | None:
-        stmt = select(self.model).where(self.model.id == id_)
+        stmt = select(self.model).where(id_ == self.model.id)
         result: Result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
@@ -27,7 +27,7 @@ class BaseRepository(Generic[T]):
     async def update_by_id(self, id_: int, kwargs: dict) -> T | None:
         stmt = (
             update(self.model)
-            .where(self.model.id == id_)
+            .where(id_ == self.model.id)
             .values(**kwargs)
             .returning(self.model)
         )
@@ -36,7 +36,7 @@ class BaseRepository(Generic[T]):
         return result.scalar_one_or_none()
 
     async def delete_by_(self, column_name: str, value: Any) -> int | None:
-        column = getattr(self.model, column_name)
+        column: object = getattr(self.model, column_name)
         stmt = delete(self.model).where(column == value).returning(self.model.id)
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
@@ -52,7 +52,7 @@ class BaseRepository(Generic[T]):
         return result.scalars().all()
 
     async def get_instance_by_(self, column_name: str, value: Any) -> T | None:
-        column = getattr(self.model, column_name)
+        column: object = getattr(self.model, column_name)
         stmt = select(self.model).where(column == value)
         result: Result = await self.session.execute(stmt)
         return result.scalar_one_or_none()

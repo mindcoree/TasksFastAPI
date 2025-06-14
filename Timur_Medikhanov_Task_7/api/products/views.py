@@ -1,11 +1,9 @@
-from typing import Annotated
-
-from fastapi import APIRouter, status, Form
+from fastapi import APIRouter, status
 
 from api.members.admins.dependencies import AdminRestricted
 from core.config import settings
 from type.annotated import form_model
-from .dependencies import ProductServiceDep, ExistingProduct
+from .dependencies import ProductServiceDep
 from .schemas import ProductOut, ProductIn, ProductUpdatePartial, ProductUpdate
 
 router = APIRouter(prefix=settings.api.products.prefix, tags=["products REST"])
@@ -47,13 +45,13 @@ async def create_product(
     response_model=ProductOut,
 )
 async def update_product(
-    product_entity: ExistingProduct,
+    product_id: int,
     restricted: AdminRestricted,
     product: form_model(ProductUpdate),
     service: ProductServiceDep,
 ) -> ProductOut:
     return await service.update_product_by_id(
-        product_id=product_entity.id, product_in=product
+        product_id=product_id, product_in=product
     )
 
 
@@ -62,13 +60,13 @@ async def update_product(
     response_model=ProductOut,
 )
 async def update_product(
-    product_entity: ExistingProduct,
+    product_id: int,
     restricted: AdminRestricted,
     product: form_model(ProductUpdatePartial),
     service: ProductServiceDep,
 ) -> ProductOut:
     return await service.update_product_by_id(
-        product_id=product_entity.id, product_in=product, partial=True
+        product_id=product_id, product_in=product, partial=True
     )
 
 
@@ -76,9 +74,9 @@ async def update_product(
     "/delete/{product_id}",
 )
 async def delete_product(
-    product_entity: ExistingProduct,
+    product_id: int,
     restricted: AdminRestricted,
     service: ProductServiceDep,
 ) -> dict:
-    await service.delete_product_by_id(delete_id=product_entity.id)
+    await service.delete_product_by_id(delete_id=product_id)
     return {"successfully": True}

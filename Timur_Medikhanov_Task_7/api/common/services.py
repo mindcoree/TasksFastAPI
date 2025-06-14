@@ -19,14 +19,14 @@ class BaseService(Generic[T]):
     async def commit_or_raise(
         self,
         result: Any | None,
-        http_exception: Type[Exception],
+        http_exception: HTTPException,
         commit: bool = True,
     ) -> Any:
 
         if result is None:
             raise http_exception
         if commit:
-             await self.repo.session.commit()
+            await self.repo.session.commit()
         return result
 
     @staticmethod
@@ -64,7 +64,7 @@ class BaseAuthService(Generic[T]):
         return await self.repo.create(data)
 
     @staticmethod
-    async def ensure_unique_verifications(instance: T, field_name: str):
+    async def ensure_unique_verifications(instance: T, field_name: str) -> bool:
         if instance:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -72,11 +72,11 @@ class BaseAuthService(Generic[T]):
             )
         return True
 
-    async def verification_email(self, email: str) -> bool:
+    async def verification_email(self, email: str) -> None:
         existing = await self.repo.get_by_email(email)
         await self.ensure_unique_verifications(existing, field_name=email)
 
-    async def verification_login(self, login: str) -> bool:
+    async def verification_login(self, login: str) -> None:
         existing = await self.repo.get_by_login(login)
         await self.ensure_unique_verifications(existing, field_name=login)
 
