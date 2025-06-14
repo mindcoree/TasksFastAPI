@@ -1,3 +1,5 @@
+from typing import Any
+
 from fastapi import HTTPException, status
 
 
@@ -8,10 +10,10 @@ class AppException(HTTPException):
         super().__init__(status_code=status_code, detail=detail)
 
     class NotFoundId(HTTPException):
-        def __init__(self, id_: int, model: str):
+        def __init__(self, field_name: str, value: Any, model: str):
             super().__init__(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"{model} with id={id_} not found",
+                detail=f"{model} with {field_name} = {value} not found",
             )
 
     class AlreadyExists(HTTPException):

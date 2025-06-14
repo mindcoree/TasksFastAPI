@@ -30,3 +30,19 @@ class AccountOut(BaseAccount):
     account_status: AccountStatus
     created_at: datetime
     updated_at: datetime
+
+
+class AccountFilter(BaseModel):
+    bank_name: BankName
+    payment_system: PaymentSystem
+
+
+class AccountFilterData(AccountFilter):
+    member_id: int
+
+
+class AccountUpdateBalance(BaseModel):
+    bank_name: BankName
+    payment_system: PaymentSystem
+    account_number: str
+    balance: Decimal
