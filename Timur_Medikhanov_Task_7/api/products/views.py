@@ -1,10 +1,11 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, Depends
 
 from api.members.admins.dependencies import AdminRestricted
 from core.config import settings
-from type.annotated import form_model
+from type.annotated import form_model, query_model
 from .dependencies import ProductServiceDep
 from .schemas import ProductOut, ProductIn, ProductUpdatePartial, ProductUpdate
+from ..common.pagination import PaginationProduct
 
 router = APIRouter(prefix=settings.api.products.prefix, tags=["products REST"])
 
@@ -21,9 +22,10 @@ async def get_product(
 @router.get("/list-products")
 async def get_list_products(
     restricted: AdminRestricted,
+    pagination_product: query_model(PaginationProduct),
     service: ProductServiceDep,
 ) -> list[ProductOut]:
-    return await service.get_list_products()
+    return await service.get_list_products_with_pagination(pagination_product)
 
 
 @router.post(
@@ -50,9 +52,7 @@ async def update_product(
     product: form_model(ProductUpdate),
     service: ProductServiceDep,
 ) -> ProductOut:
-    return await service.update_product_by_id(
-        product_id=product_id, product_in=product
-    )
+    return await service.update_product_by_id(product_id=product_id, product_in=product)
 
 
 @router.patch(

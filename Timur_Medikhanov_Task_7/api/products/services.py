@@ -1,4 +1,7 @@
+from typing import Any, Coroutine, Sequence
+
 from fastapi import HTTPException, status
+from sqlalchemy import Row, RowMapping
 from sqlalchemy.exc import IntegrityError
 
 from api.common.services import BaseService
@@ -6,6 +9,7 @@ from .exceptions import ProductNotFoundId, InvalidProductData, ProductAlreadyExi
 from .models import Product
 from .repository import ProductRepository
 from .schemas import ProductIn, ProductUpdate
+from ..common.pagination import PaginationProduct
 
 
 class ProductService(BaseService[Product]):
@@ -32,12 +36,14 @@ class ProductService(BaseService[Product]):
             commit=False,
         )
 
-    async def get_list_products(self) -> list[Product]:
-        list_products = await self.repo.get_list_products()
+    async def get_list_products_with_pagination(
+        self, pagination: PaginationProduct
+    ) -> Sequence[Row[Any] | RowMapping | Any]:
+        list_products = await self.repo.products_list_with_pagination(pagination)
         if not list_products:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="There are no products",
+                detail="There are not products",
             )
         return list_products
 
