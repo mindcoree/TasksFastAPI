@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Чат</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>Чат</h1>
+    <label for="messageInput"></label><input type="text" id="messageInput" placeholder="Введите сообщение">
+    <button onclick="sendMessage()">Отправить</button>
+    <ul id="messages"></ul>
+
+    <script>
+        // Подключение к WebSocket
+        const ws = new WebSocket("ws://localhost:8000/ws");
+
+        // Обработка входящих сообщений
+        ws.onmessage = function(event) {
+            const messages = document.getElementById("messages");
+            const message = document.createElement("li");
+            message.textContent = event.data;
+            messages.appendChild(message);
+        };
+
+        // Отправка сообщения
+        function sendMessage() {
+            const input = document.getElementById("messageInput");
+            ws.send(input.value);
+            input.value = "";
+        }
+
+        // Обработка ошибок
+        ws.onerror = function(error) {
+            console.error("WebSocket ошибка:", error);
+        };
+
+        // Обработка закрытия соединения
+        ws.onclose = function() {
+            console.log("WebSocket соединение закрыто");
+        };
+    </script>
+</body>
+</html>
