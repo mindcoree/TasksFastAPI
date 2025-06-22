@@ -1,14 +1,13 @@
 from datetime import datetime
-from decimal import Decimal
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, condecimal
 
 
 class ProductIn(BaseModel):
     name: str
     description: str | None = None
-    price: Decimal
+    price: condecimal(gt=0)
     stock: Optional[int] = 0
 
 
@@ -25,5 +24,5 @@ class ProductUpdate(ProductIn):
 class ProductUpdatePartial(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
-    price: Optional[Decimal] = None
+    price: condecimal(gt=0) = None
     stock: Optional[int] = None

@@ -1,4 +1,4 @@
-from typing import Any, Coroutine, Sequence
+from typing import Any, Sequence
 
 from sqlalchemy import select, Result, Row, RowMapping
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -23,3 +23,8 @@ class ProductRepository(BaseRepository[Product]):
         )
         result: Result = await self.session.execute(stmt)
         return result.scalars().all()
+
+    async def product_by_id(self, id_product: int) -> Product | None:
+        stmt = select(Product).where(Product.id == id_product)
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()

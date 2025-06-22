@@ -2,15 +2,19 @@ from datetime import datetime
 from decimal import Decimal
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, conint
 
 from ..common.enums import OrderStatus, PaymentStatus
 from ..common.order_product_association import OrderProductAssociation
 
 
+class OrderProductCreate(BaseModel):
+    product_id: int
+    quantity: conint(gt=0)
+
+
 class OrderCreate(BaseModel):
-    member_id: int
-    products: List[OrderProductAssociation]
+    products: list[OrderProductCreate]
     shipping_address: Optional[str] = None
 
 
@@ -24,3 +28,5 @@ class OrderOut(BaseModel):
     products_association: List[OrderProductAssociation]
     created_at: datetime
     updated_at: datetime
+
+    model_config = {"arbitrary_types_allowed": True}
