@@ -1,0 +1,20 @@
+services:
+  app:
+    build:
+      dockerfile: ./Dockerfile
+      context: ./
+    ports:
+      - "${APP_PORT:-8080}:8000"
+    env_file:
+      - .env
+    depends_on:
+      - pg
+
+  pg:
+    image: postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-shop}
+      POSTGRES_USER: ${POSTGRES_USER:-mindcore}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mindcore}
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
