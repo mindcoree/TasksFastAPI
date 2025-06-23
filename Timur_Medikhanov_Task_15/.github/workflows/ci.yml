@@ -1,0 +1,90 @@
+name: FastAPI CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    services:
+      # Сервис PostgreSQL для тестирования
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: mindcore
+          POSTGRES_PASSWORD: mindcore
+          POSTGRES_DB: shop
+        ports:
+          - 5433:5432
+        # Проверка готовности PostgreSQL
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      # Сервис Redis для тестирования (если используется)
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    # Шаг 1: Получение кода из репозитория
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Шаг 2: Настройка Python
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+        cache: 'pip'
+
+    # Шаг 3: Установка зависимостей
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip wheel
+        pip install requests
+        pip install -r requirements.txt
+        # Установка дополнительных зависимостей для тестирования
+        pip install pytest pytest-cov
+
+    # Шаг 4: Запуск скрипта prestart (если необходим для тестов)
+    - name: Run prestart script
+      run: |
+        chmod +x prestart.sh
+        ./prestart.sh
+
+    # Шаг 5: Запуск тестов
+    - name: Run tests
+      env:
+        # Настройка переменных окружения для тестирования
+        DATABASE_URL: postgresql://mindcore:mindcore@localhost:5433/shop
+        # Другие переменные окружения, если необходимы
+      run: |
+        pytest --cov=. --cov-report=xml
+
+    # Шаг 6: Сборка Docker-образа
+    - name: Build Docker image
+      run: |
+        docker build -t fastapi-app:${{ github.sha }} .
+
+    # Шаг 7: Проверка работоспособности Docker-образа
+    - name: Test Docker image
+      run: |
+        docker run --name test-container -d fastapi-app:${{ github.sha }}
+        # Проверка, что контейнер запустился успешно
+        sleep 5
+        docker logs test-container
+        docker stop test-container
+        docker rm test-container
