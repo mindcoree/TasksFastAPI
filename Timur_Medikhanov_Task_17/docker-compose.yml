@@ -1,0 +1,27 @@
+services:
+  app:
+    build:
+      dockerfile: ./Dockerfile
+      context: ./
+    ports:
+      - "8080:8000"
+
+  pg:
+    image: postgres
+    environment:
+      POSTGRES_DB: shop
+      POSTGRES_USER: mindcore
+      POSTGRES_PASSWORD: mindcore
+    ports:
+      - "5433:5432"
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - "9090:9090"
+    depends_on:
+      - app
